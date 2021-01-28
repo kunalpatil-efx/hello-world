@@ -24,3 +24,27 @@ pm.test("Status code is 200", function () {
     }
     
 });
+
+//Transfer
+//Pre Request
+pm.environment.set("transfer_token", "")
+var sign_on = pm.environment.get("signon_token");
+if(sign_on == null || sign_on == "") {
+    throw new Error("No Sign On Token found. Please run SIGN_ON Request first.");
+}
+console.log("Using Sign on token: " + sign_on);
+
+//Test
+pm.test("Successful POST request", function () {
+    pm.response.to.have.status(200);
+    //pm.expect(pm.response.code).to.be.oneOf([201, 202]);
+
+    var jsonObject = xml2Json(responseBody);
+    console.log(JSON.stringify(jsonObject));
+    if(jsonObject.response.$.result_msg === "success") {
+        console.log("Transfer Token: " + jsonObject.response.get_transfer_token.transfer_token);
+        pm.environment.set("transfer_token", jsonObject.response.get_transfer_token.transfer_token);
+    } else {
+        throw new Error("Unable to generate transfer token");
+    }    
+});
