@@ -1,0 +1,525 @@
+{
+	"info": {
+		"_postman_id": "17cd1e08-7e60-4bdb-8606-642f88d89b96",
+		"name": "Reference API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Section 3 Allowed Document",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);    \r",
+							"});\r",
+							"if(pm.response.status != 200) {\r",
+							"    throw new Error(\"Http Status: \" + pm.response.status);\r",
+							"}\r",
+							"const res = pm.response.json();\r",
+							"const vizData = {\r",
+							"    labels: [\"Allowed\", \"Unallowed\"],\r",
+							"    data: [ res.allowedDocuments.length, res.nonAllowedDocuments.length ]\r",
+							"};\r",
+							"var template = `\r",
+							"<canvas id=\"myChart\" height=\"75\"></canvas>\r",
+							"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script> \r",
+							"\r",
+							"<script>\r",
+							"    // Get DOM element to render the chart in\r",
+							"    var ctx = document.getElementById(\"myChart\");\r",
+							"\r",
+							"    // Configure Chart JS here.\r",
+							"    // You can customize the options passed to this constructor to\r",
+							"    // make the chart look and behave the way you want\r",
+							"    var myChart = new Chart(ctx, {\r",
+							"        type: \"bar\",\r",
+							"        data: {\r",
+							"            labels: [], // We will update this later in pm.getData()\r",
+							"            datasets: [{\r",
+							"                data: [], // We will update this later in pm.getData()\r",
+							"                \r",
+							"                // Change these colours to customize the chart\r",
+							"                backgroundColor: [\"rgba(153, 102, 255, 0.2)\",\"rgba(201, 203, 207, 0.2)\",\"rgba(0, 159, 64, 0.2)\",\"rgba(255, 205, 86, 0.2)\",\"rgba(75, 192, 192, 0.2)\",\"rgba(255, 99, 132, 0.2)\",\"rgba(54, 162, 235, 0.2)\"],\r",
+							"                \"borderColor\":[\"rgb(153, 102, 255)\",\"rgb(201, 203, 207)\",\"rgb(255, 159, 64)\",\"rgb(255, 205, 86)\",\"rgb(255, 99, 132)\",\"rgb(75, 192, 192)\",\"rgb(54, 162, 235)\"],\r",
+							"                \"borderWidth\":1\r",
+							"            }]\r",
+							"        },\r",
+							"        options: {\r",
+							"            legend: { display: false },\r",
+							"            title: {\r",
+							"                display: true,\r",
+							"                text: 'Count'\r",
+							"            },\r",
+							"            scales: {\r",
+							"                xAxes: [{\r",
+							"                    display: true,\r",
+							"                    scaleLabel: {\r",
+							"                        display: true,\r",
+							"                        labelString: 'Items'\r",
+							"                    }\r",
+							"                }],\r",
+							"                yAxes: [{\r",
+							"                    display: true,\r",
+							"                    scaleLabel: {\r",
+							"                        display: true,\r",
+							"                        labelString: 'Count'\r",
+							"                    }\r",
+							"                }]\r",
+							"            }\r",
+							"        }\r",
+							"\r",
+							"    });\r",
+							"\r",
+							"    // Access the data passed to pm.visualizer.set() from the JavaScript\r",
+							"    // code of the Visualizer template\r",
+							"    pm.getData(function (err, value) {\r",
+							"        myChart.data.datasets[0].data = value.data;\r",
+							"        myChart.data.labels = value.labels;\r",
+							"        myChart.options.title.text = 'Section 3 Documents'\r",
+							"        myChart.update();\r",
+							"    });\r",
+							"\r",
+							"</script>`;\r",
+							"\r",
+							"pm.visualizer.set(template, vizData);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/internal/eev/reference-data/v1/documents/allowed-documents?i9Version=i9v071717&citizenshipStatus=LAWFUL_PERMANENT_RESIDENT&evVersion=v30&isMinor=YES&isSpecialPlacement=YES&i9Section=3",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"reference-data",
+						"v1",
+						"documents",
+						"allowed-documents"
+					],
+					"query": [
+						{
+							"key": "i9Version",
+							"value": "i9v071717"
+						},
+						{
+							"key": "citizenshipStatus",
+							"value": "LAWFUL_PERMANENT_RESIDENT"
+						},
+						{
+							"key": "evVersion",
+							"value": "v30"
+						},
+						{
+							"key": "isMinor",
+							"value": "YES"
+						},
+						{
+							"key": "isSpecialPlacement",
+							"value": "YES"
+						},
+						{
+							"key": "i9Section",
+							"value": "3"
+						},
+						{
+							"key": "flattenSubDocuments",
+							"value": "true",
+							"disabled": true
+						},
+						{
+							"key": "displayName",
+							"value": "I-551 Stamp",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Section 3 Allowed docs (Flattened)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const res = pm.response.json();\r",
+							"const vizData = {\r",
+							"    labels: [\"Allowed\", \"Unallowed\"],\r",
+							"    data: [ res.allowedDocuments.length, res.nonAllowedDocuments.length ]\r",
+							"};\r",
+							"var template = `\r",
+							"<canvas id=\"myChart\" height=\"75\"></canvas>\r",
+							"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script> \r",
+							"\r",
+							"<script>\r",
+							"    // Get DOM element to render the chart in\r",
+							"    var ctx = document.getElementById(\"myChart\");\r",
+							"\r",
+							"    // Configure Chart JS here.\r",
+							"    // You can customize the options passed to this constructor to\r",
+							"    // make the chart look and behave the way you want\r",
+							"    var myChart = new Chart(ctx, {\r",
+							"        type: \"bar\",\r",
+							"        data: {\r",
+							"            labels: [], // We will update this later in pm.getData()\r",
+							"            datasets: [{\r",
+							"                data: [], // We will update this later in pm.getData()\r",
+							"                \r",
+							"                // Change these colours to customize the chart\r",
+							"                backgroundColor: [\"rgba(75, 192, 192, 0.2)\",\"rgba(255, 99, 132, 0.2)\",\"rgba(0, 159, 64, 0.2)\",\"rgba(255, 205, 86, 0.2)\",\"rgba(54, 162, 235, 0.2)\",\"rgba(153, 102, 255, 0.2)\",\"rgba(201, 203, 207, 0.2)\"],\r",
+							"                \"borderColor\":[\"rgb(255, 99, 132)\",\"rgb(75, 192, 192)\",\"rgb(255, 159, 64)\",\"rgb(255, 205, 86)\",\"rgb(54, 162, 235)\",\"rgb(153, 102, 255)\",\"rgb(201, 203, 207)\"],\r",
+							"                \"borderWidth\":1\r",
+							"            }]\r",
+							"        },\r",
+							"        options: {\r",
+							"            legend: { display: false },\r",
+							"            title: {\r",
+							"                display: true,\r",
+							"                text: 'Count'\r",
+							"            },\r",
+							"            scales: {\r",
+							"                xAxes: [{\r",
+							"                    display: true,\r",
+							"                    scaleLabel: {\r",
+							"                        display: true,\r",
+							"                        labelString: 'Items'\r",
+							"                    }\r",
+							"                }],\r",
+							"                yAxes: [{\r",
+							"                    display: true,\r",
+							"                    scaleLabel: {\r",
+							"                        display: true,\r",
+							"                        labelString: 'Count'\r",
+							"                    }\r",
+							"                }]\r",
+							"            }\r",
+							"        }\r",
+							"\r",
+							"    });\r",
+							"\r",
+							"    // Access the data passed to pm.visualizer.set() from the JavaScript\r",
+							"    // code of the Visualizer template\r",
+							"    pm.getData(function (err, value) {\r",
+							"        myChart.data.datasets[0].data = value.data;\r",
+							"        myChart.data.labels = value.labels;\r",
+							"        myChart.options.title.text = 'Section 3 Documents'\r",
+							"        myChart.update();        \r",
+							"    });\r",
+							"\r",
+							"</script>`;\r",
+							"\r",
+							"// -------------------------\r",
+							"// - Bind data to template -\r",
+							"// -------------------------\r",
+							"\r",
+							"// Set the visualizer template\r",
+							"pm.visualizer.set(template, vizData);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://qa-workforce-api-internal.ews.npe.east.gcp.efx/internal/eev/reference-data/v1/documents/allowed-documents?i9Version=i9v071717&citizenshipStatus=ALIEN_AUTHORIZED_TO_WORK&evVersion=v30&isMinor=YES&isSpecialPlacement=YES&i9Section=3&flattenSubDocuments=true",
+					"protocol": "https",
+					"host": [
+						"qa-workforce-api-internal",
+						"ews",
+						"npe",
+						"east",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"reference-data",
+						"v1",
+						"documents",
+						"allowed-documents"
+					],
+					"query": [
+						{
+							"key": "i9Version",
+							"value": "i9v071717"
+						},
+						{
+							"key": "citizenshipStatus",
+							"value": "ALIEN_AUTHORIZED_TO_WORK"
+						},
+						{
+							"key": "evVersion",
+							"value": "v30"
+						},
+						{
+							"key": "isMinor",
+							"value": "YES"
+						},
+						{
+							"key": "isSpecialPlacement",
+							"value": "YES"
+						},
+						{
+							"key": "i9Section",
+							"value": "3"
+						},
+						{
+							"key": "flattenSubDocuments",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Section 2 Documents",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const res = pm.response.json();\r",
+							"const vizData = {\r",
+							"    labels: [\"Allowed\", \"Unallowed\"],\r",
+							"    data: [ res.allowedDocuments.length, res.nonAllowedDocuments.length ]\r",
+							"};\r",
+							"var template = `\r",
+							"<canvas id=\"myChart\" height=\"75\"></canvas>\r",
+							"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script> \r",
+							"\r",
+							"<script>\r",
+							"    // Get DOM element to render the chart in\r",
+							"    var ctx = document.getElementById(\"myChart\");\r",
+							"\r",
+							"    // Configure Chart JS here.\r",
+							"    // You can customize the options passed to this constructor to\r",
+							"    // make the chart look and behave the way you want\r",
+							"    var myChart = new Chart(ctx, {\r",
+							"        type: \"bar\",\r",
+							"        data: {\r",
+							"            labels: [], // We will update this later in pm.getData()\r",
+							"            datasets: [{\r",
+							"                data: [], // We will update this later in pm.getData()\r",
+							"                \r",
+							"                // Change these colours to customize the chart\r",
+							"                backgroundColor: [\"rgba(0, 159, 64, 0.2)\",\"rgba(255, 205, 86, 0.2)\",\"rgba(75, 192, 192, 0.2)\",\"rgba(255, 99, 132, 0.2)\",\"rgba(54, 162, 235, 0.2)\",\"rgba(153, 102, 255, 0.2)\",\"rgba(201, 203, 207, 0.2)\"],\r",
+							"                \"borderColor\":[\"rgb(255, 159, 64)\",\"rgb(255, 205, 86)\",\"rgb(255, 99, 132)\",\"rgb(75, 192, 192)\",\"rgb(54, 162, 235)\",\"rgb(153, 102, 255)\",\"rgb(201, 203, 207)\"],\r",
+							"                \"borderWidth\":1\r",
+							"            }]\r",
+							"        },\r",
+							"        options: {\r",
+							"            legend: { display: false },\r",
+							"            title: {\r",
+							"                display: true,\r",
+							"                text: 'Count'\r",
+							"            },\r",
+							"            scales: {\r",
+							"                xAxes: [{\r",
+							"                    display: true,\r",
+							"                    scaleLabel: {\r",
+							"                        display: true,\r",
+							"                        labelString: 'Document Type'\r",
+							"                    }\r",
+							"                }],\r",
+							"                yAxes: [{\r",
+							"                    display: true,\r",
+							"                    scaleLabel: {\r",
+							"                        display: true,\r",
+							"                        labelString: 'Count'\r",
+							"                    }\r",
+							"                }]\r",
+							"            }\r",
+							"        }\r",
+							"\r",
+							"    });\r",
+							"\r",
+							"    // Access the data passed to pm.visualizer.set() from the JavaScript\r",
+							"    // code of the Visualizer template\r",
+							"    pm.getData(function (err, value) {\r",
+							"        myChart.data.datasets[0].data = value.data;\r",
+							"        myChart.data.labels = value.labels;\r",
+							"        myChart.options.title.text = 'Section 2 Documents'\r",
+							"        myChart.update();\r",
+							"    });\r",
+							"\r",
+							"</script>`;\r",
+							"\r",
+							"pm.visualizer.set(template, vizData);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/internal/eev/reference-data/v1/documents/allowed-documents?i9Version=i9v071717&citizenshipStatus=LAWFUL_PERMANENT_RESIDENT&evVersion=v30&isMinor=YES&isSpecialPlacement=YES",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"reference-data",
+						"v1",
+						"documents",
+						"allowed-documents"
+					],
+					"query": [
+						{
+							"key": "i9Version",
+							"value": "i9v071717"
+						},
+						{
+							"key": "citizenshipStatus",
+							"value": "LAWFUL_PERMANENT_RESIDENT"
+						},
+						{
+							"key": "evVersion",
+							"value": "v30"
+						},
+						{
+							"key": "isMinor",
+							"value": "YES"
+						},
+						{
+							"key": "isSpecialPlacement",
+							"value": "YES"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Load Documents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/internal/eev/reference-data/v1/documents/load-documents-definitions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"internal",
+						"eev",
+						"reference-data",
+						"v1",
+						"documents",
+						"load-documents-definitions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Documents (Business)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ALT_HOST}}/business/eev/reference-data/v1/documents/allowed-documents?i9Version=i9v071717&citizenshipStatus=ALIEN_AUTHORIZED_TO_WORK&evVersion=v30&isMinor=YES&isSpecialPlacement=YES&displayName=I-551 Stamp",
+					"host": [
+						"{{ALT_HOST}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"reference-data",
+						"v1",
+						"documents",
+						"allowed-documents"
+					],
+					"query": [
+						{
+							"key": "i9Version",
+							"value": "i9v071717"
+						},
+						{
+							"key": "citizenshipStatus",
+							"value": "ALIEN_AUTHORIZED_TO_WORK"
+						},
+						{
+							"key": "evVersion",
+							"value": "v30"
+						},
+						{
+							"key": "isMinor",
+							"value": "YES"
+						},
+						{
+							"key": "isSpecialPlacement",
+							"value": "YES"
+						},
+						{
+							"key": "i9Section",
+							"value": "3",
+							"disabled": true
+						},
+						{
+							"key": "flattenSubDocuments",
+							"value": "true",
+							"disabled": true
+						},
+						{
+							"key": "displayName",
+							"value": "I-551 Stamp"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{BEARER_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

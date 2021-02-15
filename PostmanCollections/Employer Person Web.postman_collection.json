@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "6b161fab-a872-444f-b9be-ab57254b0f34",
+		"name": "Employer Person Web",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search Employee",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ALT_HOST}}/business/es-platform/employer-person/v1/employees/search?query=Nine",
+					"host": [
+						"{{ALT_HOST}}"
+					],
+					"path": [
+						"business",
+						"es-platform",
+						"employer-person",
+						"v1",
+						"employees",
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "Nine"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{BEARER_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

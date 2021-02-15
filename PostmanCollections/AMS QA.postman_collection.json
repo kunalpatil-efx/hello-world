@@ -1,0 +1,59 @@
+{
+	"info": {
+		"_postman_id": "32d3e723-f001-48b6-a740-f189ddbe91bb",
+		"name": "AMS QA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Referer",
+						"value": "https://qa-workforce.equifax.com",
+						"type": "text"
+					},
+					{
+						"key": "Origin",
+						"value": "https://qa-workforce.equifax.com",
+						"type": "text"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ssstoken\": \"0D4B97164F937A57B8AD177F9DC86608\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.qa.equifax.com/business/es-platform/esportal-user/v3/tokens",
+					"protocol": "https",
+					"host": [
+						"api",
+						"qa",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"es-platform",
+						"esportal-user",
+						"v3",
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

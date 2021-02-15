@@ -1,0 +1,258 @@
+{
+	"info": {
+		"_postman_id": "3e5169e4-1585-42fb-877c-d5c8d84fc391",
+		"name": "Misc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Barricade decrypt",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"encryptedData\": \"Zu1ZlHDoMACWkrgvRxRz8NkEUsqyZT4lqDUEp3iiLHEmuXdQ\",\r\n   \"keyStoreId\": \"E5uThQWPaanI8vHExNTN\",\r\n   \"hmacValue\": \"wGw7KX2ssjAJKTqj6lifbQP7qcUAD7QWQeoLBJF4ytzuUPSC6bpmRlosh0KhajHaXp81RQJWELruCkXp7ZMuSg==\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/barricadeTest/decrypt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"barricadeTest",
+						"decrypt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get I9 Form",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/internal/eev/form-i9/v1/forms/1JoI9G5l0w24LckDKRwa/history",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"1JoI9G5l0w24LckDKRwa",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BlockingRequest",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9090/test/block/sectiontwo",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"test",
+						"block",
+						"sectiontwo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FuturesRequest",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9090/test/futures/sectiontwo",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"test",
+						"futures",
+						"sectiontwo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TestDataRequest",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4040/test/data",
+					"host": [
+						"localhost"
+					],
+					"port": "4040",
+					"path": [
+						"test",
+						"data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://dev-workforce-api-internal.ews.npe.east.gcp.efx/business/eev/form-i9/v1/packets/818829b2-b5b2-4c0c-906c-8ab691519a75/forms/metadata",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"employerId\": \"fd7d260c-4498-4f71-a430-4d7aea04cf4c\",\r\n  \"recordVersion\": \"1\",\r\n  \"employerLocationId\": \"dd7d260c-4498-4f71-a430-4d7aea04cf4c\",\r\n  \"sourceRefId\": \"818829b2-b5b2-4c0c-906c-8ab691519a75\",\r\n  \"sourceId\": \"packet-ui\",\r\n  \"formRevDate\": \"i9v071717\",\r\n  \"everifyVersion\": \"v30\",\r\n  \"employeeId\": \"dd7d260c-4498-4f71-a430-4d7aea04c\",\r\n  \"projectedStartDate\": \"2020-02-01\",\r\n  \"status\": \"new\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.east.gcp.efx/business/eev/form-i9/v1/packets/818829b2-b5b2-4c0c-906c-8ab691519a75/forms/metadata",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"east",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"packets",
+						"818829b2-b5b2-4c0c-906c-8ab691519a75",
+						"forms",
+						"metadata"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feature Flag",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.dev.equifax.com/business/eev/form-i9/v1/forms/feature/receiptUpdate",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"feature",
+						"receiptUpdate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feature Flag Copy",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/internal/eev/form-i9/v1/forms/feature/{{featureName}}",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"feature",
+						"{{featureName}}"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{BEARER_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "featureName",
+			"value": "receiptUpdate"
+		}
+	]
+}

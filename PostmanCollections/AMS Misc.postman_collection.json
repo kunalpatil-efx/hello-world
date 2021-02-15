@@ -1,0 +1,145 @@
+{
+	"info": {
+		"_postman_id": "7e715a83-9a80-433e-8f81-3b3c6bbaacd3",
+		"name": "AMS Misc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Permissions By Employer",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "OHMZwjs1tuWtZSRepJZsDie0fOPEevigxUwC2Dcm9YN1FZK6EtdeyxsV9q6yJOi77j1zjlcc9XsEMhwekL3cmQGkcW9YlTLsLuNqllw8lj3ThomRtRH0vRS+uhQ2XN6HWi8h8BCgpXbPJY4Ak8VTFXGuqLpcqkdGCv3Rf6er+S3IVuW70ZL/uZL3many34JrBiZr2+9DCKhOtG6HkKpf9Qz8e9iH9A==",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.dev.equifax.com/business/es-platform/esportal-user/v3/users/me/security-functions/EEV.I9_READ?employerId=78bc1cfe-67e2-4de9-8b79-ad70c07f4b84",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"es-platform",
+						"esportal-user",
+						"v3",
+						"users",
+						"me",
+						"security-functions",
+						"EEV.I9_READ"
+					],
+					"query": [
+						{
+							"key": "employerId",
+							"value": "78bc1cfe-67e2-4de9-8b79-ad70c07f4b84"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get AMS Functions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.east.gcp.efx/internal/ams/functions/v1",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"east",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"ams",
+						"functions",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AMSDevLogin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"bearer_token\", \"\")\r",
+							"var token = pm.environment.get(\"transfer_token\");\r",
+							"if(token == null || token == \"\") {\r",
+							"    throw new Error(\"No Transfer token. Please run SIGN_ON and TRANSFER_TOKEN Requests.\");\r",
+							"}\r",
+							"console.log(\"Using Transfer token: \" + token);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"    var resp = pm.response.json();\r",
+							"    if(resp.securityToken == null || resp.securityToken == \"\") {\r",
+							"        throw new Error(\"Unable to generate bearer token\");\r",
+							"    }\r",
+							"    console.log(\"Bearer \" + resp.securityToken);\r",
+							"    //pm.collectionVariables.set(\"bearer_token\", resp.securityToken);\r",
+							"    pm.environment.set(\"BEARER_TOKEN\", resp.securityToken);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\t\"token\": \"{{transfer_token}}\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/internal/ams/token-service/v1/token/exchange",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"ams",
+						"token-service",
+						"v1",
+						"token",
+						"exchange"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

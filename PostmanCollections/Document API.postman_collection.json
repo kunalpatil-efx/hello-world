@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "3472524c-d9f6-4754-a4b0-4cb2ff2f6ce3",
+		"name": "Document API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get document Object",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/internal/eev/documents/v1/document/afa913ad-345a1fd9-646c-47bb-9426-72636d8271f6/object",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"documents",
+						"v1",
+						"document",
+						"afa913ad-345a1fd9-646c-47bb-9426-72636d8271f6",
+						"object"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "documentId",
+			"value": "afa913ad-0ae2209e-21fa-4034-a711-9ecec935e7c0"
+		}
+	]
+}

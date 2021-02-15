@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "eb78a106-da3f-439c-8c19-68a9ff08ee51",
+		"name": "Misc 2",
+		"description": "This is a readymade Bar Chart using ChartJS to help you get started quickly with [data visualization in Postman](https://learning.getpostman.com/docs/postman/sending_api_requests/visualizer/). All you need to do is bind the right data in the right format to the template. Check the \"Tests\" tab in the request for details.\n\nThe data used in this example is generated using Postman's dynamic variables, along with the Postman Echo service. You can edit the request and change the URL any endpoint of your choice.\n\nYou will see an object called `vizData` in the \"Tests tab\". You will have edit bind the data from the response you get to the `vizData` variable. It has two properties:\n\n- `labels`: This takes an array of strings that will serve as labels on the data items\n- `data`: This takes an array of numbers that form the first dataseries of the chart",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bar Chart of 2D data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Access the response data JSON as a JavaScript object",
+							"const res = pm.response.json();",
+							"",
+							"// -----------------------------",
+							"// - Structure data for charts -",
+							"// -----------------------------",
+							"",
+							"// EDIT THIS OBJECT TO BIND YOUR DATA",
+							"const vizData = {",
+							"    ",
+							"    // Labels take an array of strings",
+							"    labels: res.data.labels,",
+							"    ",
+							"    // Data takes an array of numbers",
+							"    data: res.data.data",
+							"};",
+							"",
+							"// ------------",
+							"// - Template -",
+							"// ------------",
+							"",
+							"// Configure the template",
+							"var template = `",
+							"<canvas id=\"myChart\" height=\"75\"></canvas>",
+							"",
+							"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script> ",
+							"",
+							"<script>",
+							"    // Get DOM element to render the chart in",
+							"    var ctx = document.getElementById(\"myChart\");",
+							"",
+							"    // Configure Chart JS here.",
+							"    // You can customize the options passed to this constructor to",
+							"    // make the chart look and behave the way you want",
+							"    var myChart = new Chart(ctx, {",
+							"        type: \"bar\",",
+							"        data: {",
+							"            labels: [], // We will update this later in pm.getData()",
+							"            datasets: [{",
+							"                data: [], // We will update this later in pm.getData()",
+							"                ",
+							"                // Change these colours to customize the chart",
+							"                backgroundColor: [\"#003f5c\", \"#58508d\", \"#bc5090\", \"#ff6361\", \"#ffa600\"],",
+							"            }]",
+							"        },",
+							"        options: {",
+							"            legend: { display: false },",
+							"            title: {",
+							"                display: true,",
+							"                text: 'Count'",
+							"            },",
+							"            scales: {",
+							"                xAxes: [{",
+							"                    display: true,",
+							"                    scaleLabel: {",
+							"                        display: true,",
+							"                        labelString: 'Items'",
+							"                    }",
+							"                }],",
+							"                yAxes: [{",
+							"                    display: true,",
+							"                    scaleLabel: {",
+							"                        display: true,",
+							"                        labelString: 'Count'",
+							"                    }",
+							"                }]",
+							"            }",
+							"        }",
+							"",
+							"    });",
+							"",
+							"    // Access the data passed to pm.visualizer.set() from the JavaScript",
+							"    // code of the Visualizer template",
+							"    pm.getData(function (err, value) {",
+							"        myChart.data.datasets[0].data = value.data;",
+							"        myChart.data.labels = value.labels;",
+							"        myChart.update();",
+							"    });",
+							"",
+							"</script>`;",
+							"",
+							"// -------------------------",
+							"// - Bind data to template -",
+							"// -------------------------",
+							"",
+							"// Set the visualizer template",
+							"pm.visualizer.set(template, vizData);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"labels\": [\n\t\t\"{{$randomCountryCode}}\",\n\t\t\"{{$randomCountryCode}}\",\n\t\t\"{{$randomCountryCode}}\",\n\t\t\"{{$randomCountryCode}}\",\n\t\t\"{{$randomCountryCode}}\"\n\t],\n\t\"data\": [\n\t\t{{$randomInt}},\n\t\t{{$randomInt}},\n\t\t{{$randomInt}},\n\t\t{{$randomInt}},\n\t\t{{$randomInt}}\n\t]\n}"
+				},
+				"url": {
+					"raw": "https://postman-echo.com/post",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"post"
+					]
+				},
+				"description": "Render a simple 2D bar chart using ChartJS."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

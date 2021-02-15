@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "6c86c3d1-b5a0-4a13-9c8c-ca02a789044c",
+		"name": "Task Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Task Types",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}​/internal/es-platform/task-management/v1/task-types/",
+					"host": [
+						"{{HOST}}​"
+					],
+					"path": [
+						"internal",
+						"es-platform",
+						"task-management",
+						"v1",
+						"task-types",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Task By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}​/internal/es-platform/task-management/v1/tasks/8cbe9757-6cc2-45e4-98b0-dca7e9759892",
+					"host": [
+						"{{HOST}}​"
+					],
+					"path": [
+						"internal",
+						"es-platform",
+						"task-management",
+						"v1",
+						"tasks",
+						"8cbe9757-6cc2-45e4-98b0-dca7e9759892"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Task By ID Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}​/internal/es-platform/task-management/v1/tasks-type/8ba3ea1c-1fab-4b0e-a989-c454f3e1290f",
+					"host": [
+						"{{HOST}}​"
+					],
+					"path": [
+						"internal",
+						"es-platform",
+						"task-management",
+						"v1",
+						"tasks-type",
+						"8ba3ea1c-1fab-4b0e-a989-c454f3e1290f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Task Groups",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}​/internal/es-platform/task-management/v1/task-groups",
+					"host": [
+						"{{HOST}}​"
+					],
+					"path": [
+						"internal",
+						"es-platform",
+						"task-management",
+						"v1",
+						"task-groups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Task Summaries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/internal/es-platform/task-management/v1/task-families",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"es-platform",
+						"task-management",
+						"v1",
+						"task-families"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{BEARER_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

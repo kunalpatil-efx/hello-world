@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "613682f3-5f69-48d3-988d-5fc012472b79",
+		"name": "AMS Login",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SIGN_ON",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"    var jsonObject = xml2Json(responseBody);\r",
+							"    console.log(JSON.stringify(jsonObject));\r",
+							"    \r",
+							"    if(jsonObject.response.$.result_msg === \"success\") {\r",
+							"        console.log(\"Signon Token: \" + jsonObject.response.signon_user.token);\r",
+							"        pm.environment.set(\"signon_token\", jsonObject.response.signon_user.token);\r",
+							"    } else {\r",
+							"        pm.setNextRequest(null);\r",
+							"        throw new Error(\"Unable to authenticate the user\");        \r",
+							"    }\r",
+							"    \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var user = pm.environment.has(\"user\") ? pm.environment.get(\"user\") : pm.collectionVariables.get(\"user\");\r",
+							"var password = pm.environment.has(\"password\") ? pm.environment.get(\"password\") : pm.collectionVariables.get(\"password\");\r",
+							"console.log(\"Logging using User: \" + user);\r",
+							"\r",
+							"if(user == null || user == \"\" || password == null || password == \"\") {\r",
+							"        throw new Error(\"User and Password is required\")\r",
+							"}\r",
+							"pm.environment.set(\"signon_token\", \"\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "dev_auth_app_user",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "thisisthepassword",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<request version=\"1.0\" server=\"\" application_server_id=\"\" client_session_id=\".:vstest.executionengine.x86:11792\">\r\n  <signon_user request_id=\"\">\r\n    <email_address>{{user}}</email_address>\r\n    <employer_code>92020</employer_code>\r\n    <pin>{{password}}</pin>\r\n    <requesting_application_id>ams</requesting_application_id>\r\n  </signon_user>\r\n</request>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SSS_HOST}}/sssdev2/sssisapi.dll",
+					"host": [
+						"{{SSS_HOST}}"
+					],
+					"path": [
+						"sssdev2",
+						"sssisapi.dll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TRANSFER_TOKEN",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"transfer_token\", \"\")\r",
+							"var sign_on = pm.environment.get(\"signon_token\");\r",
+							"if(sign_on == null || sign_on == \"\") {\r",
+							"    throw new Error(\"No Sign On Token found. Please run SIGN_ON Request first.\");\r",
+							"}\r",
+							"console.log(\"Using Sign on token: \" + sign_on);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    //pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"\r",
+							"    var jsonObject = xml2Json(responseBody);\r",
+							"    console.log(JSON.stringify(jsonObject));\r",
+							"    if(jsonObject.response.$.result_msg === \"success\") {\r",
+							"        console.log(\"Transfer Token: \" + jsonObject.response.get_transfer_token.transfer_token);\r",
+							"        pm.environment.set(\"transfer_token\", jsonObject.response.get_transfer_token.transfer_token);\r",
+							"    } else {\r",
+							"        throw new Error(\"Unable to generate transfer token\");\r",
+							"    }    \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<request version=\"1.0\" server=\"\" application_server_id=\"\" client_session_id=\"\">\r\n    <get_transfer_token request_id=\"\">\r\n        <token>{{signon_token}}</token>\r\n        <requesting_application_id>SSS_CHECKOUT_APPLICATION</requesting_application_id>\r\n    </get_transfer_token>\r\n</request>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SSS_HOST}}/sssdev2/sssisapi.dll",
+					"host": [
+						"{{SSS_HOST}}"
+					],
+					"path": [
+						"sssdev2",
+						"sssisapi.dll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AMSDevLogin-new",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"bearer_token\", \"\")\r",
+							"var token = pm.environment.get(\"transfer_token\");\r",
+							"if(token == null || token == \"\") {\r",
+							"    throw new Error(\"No Transfer token. Please run SIGN_ON and TRANSFER_TOKEN Requests.\");\r",
+							"}\r",
+							"console.log(\"Using Transfer token: \" + token);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"    var resp = pm.response.json();\r",
+							"    if(resp.securityToken == null || resp.securityToken == \"\") {\r",
+							"        throw new Error(\"Unable to generate bearer token\");\r",
+							"    }\r",
+							"    console.log(\"Bearer \" + resp.securityToken);\r",
+							"    //pm.collectionVariables.set(\"bearer_token\", resp.securityToken);\r",
+							"    pm.environment.set(\"BEARER_TOKEN\", resp.securityToken);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ssstoken\": \"{{transfer_token}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dev.equifax.com/business/es-platform/esportal-user/v3/tokens",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"es-platform",
+						"esportal-user",
+						"v3",
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "dev_auth_app_user",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "thisisthepassword",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "SSS_HOST",
+			"value": "https://stl-biz-d2-sss.global.equifax.com:55150"
+		},
+		{
+			"key": "HOST",
+			"value": "https://dev-workforce-api-internal.ews.npe.east.gcp.efx"
+		},
+		{
+			"key": "signon_token",
+			"value": ""
+		},
+		{
+			"key": "transfer_token",
+			"value": ""
+		},
+		{
+			"key": "bearer_token",
+			"value": ""
+		},
+		{
+			"key": "user",
+			"value": "kunal.patil+hradmin@equifax.com",
+			"disabled": true
+		},
+		{
+			"key": "password",
+			"value": "Equifax@2021",
+			"disabled": true
+		}
+	]
+}

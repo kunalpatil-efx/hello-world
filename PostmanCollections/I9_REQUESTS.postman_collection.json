@@ -1,0 +1,1413 @@
+{
+	"info": {
+		"_postman_id": "37fc09ad-d9ce-4be6-a88d-9f31f0ffcdf8",
+		"name": "I9_REQUESTS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CREATE_NEW_PACKET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"eval(globals.util);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"console.log(\"Packet ID: \" + jsonData.id);\r",
+							"pm.collectionVariables.set(\"packetId\", jsonData.id);\r",
+							"\r",
+							"var requestData = JSON.parse(pm.request.body.raw);\r",
+							"console.log(\"Request body: \" + requestData);\r",
+							"\r",
+							"console.log(\"First name: \" + requestData.first_name);\r",
+							"console.log(\"Last name: \" + requestData.last_name);\r",
+							"pm.collectionVariables.set(\"employee_first_name\", requestData.first_name);\r",
+							"pm.collectionVariables.set(\"employee_last_name\", requestData.last_name);\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"first_name\": \"{{$randomFirstName}}\",\r\n\t\"last_name\": \"{{$randomLastName}}\",\r\n\t\"email\": \"kunal.patil@equifax.com\",\r\n\t\"phone\": \"1321321333\",\r\n\t\"start_date\": \"2021-03-03\",\r\n\t\"language\": \"en\",\r\n\t\"work_location_id\": \"{{employerLocationId}}\",\r\n\t\"i9_anywhere\": false,\r\n\t\"packet_template_id\": \"1f51bfbb-fe48-47da-b839-89f77d51312d\",\r\n\t\"employer_id\": \"{{employerId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dev.equifax.com/business/es-platform/packet/v1/packets/newhire",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"es-platform",
+						"packet",
+						"v1",
+						"packets",
+						"newhire"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST_Metadata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"var responseData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"i9DocumentId\", responseData.documentId);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.unset(\"variable_key\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"employerId\": \"{{employerId}}\",\r\n    \"recordVersion\": 1,\r\n    \"employerLocationId\": \"{{employerLocationId}}\",\r\n    \"sourceRefId\": \"{{packetId}}\",\r\n    \"formRevDate\": \"i9v071717\",\r\n    \"employeeFactId\": \"{{employeeFactId}}\",\r\n    \"status\": \"new\",\r\n    \"sourceId\": \"packet-ui\",\r\n    \"projectedStartDate\": \"2021-12-12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/internal/eev/form-i9/v1/forms",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_Section1",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"formData\": {\r\n        \"isMinor\": false,\r\n        \"ssnRefused\": false,\r\n        \"ssnApplied\": false,\r\n        \"sectionOne\": {\r\n            \"employeeInfo\": {\r\n                \"firstName\": \"{{employee_first_name}}\",\r\n                \"lastName\": \"{{employee_last_name}}\",\r\n                \"dateOfBirth\": \"{{employee_dob}}\",\r\n                \"otherLastName\": \"\",\r\n                \"socialSecurityNumber\": \"{{employee_ssn}}\",\r\n                \"state\": \"GA\",\r\n                \"telephoneNumber\": \"6781233333\",\r\n                \"zipCode\": \"30009\",\r\n                \"address\": \"1277 Lenox Park Blvd\",\r\n                \"city\": \"Atlanta\",\r\n                \"email\": \"{{employee_first_name}}@test.com\"\r\n            },\r\n            \"attestation\": {\r\n                \"isAlienAuthorizedToWork\": false,\r\n                \"isLawfulPermanentResident\": false,\r\n                \"isNonCitizenNational\": false,\r\n                \"isUnitedStatesCitizen\": true\r\n            },                \r\n            \"signature\": {\r\n                \"name\": \"{{employee_first_name}}\",\r\n                \"method\": \"IMAGE\",\r\n                \"imageType\": \"image/png\",\r\n                \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAC8AAABbCAYAAADjlNx7AAAFmUlEQVR4XtWbWehvUxTHP5eSzDI8GDJkKjLECx6QqUjI8IIuuV0iYyFPeJGiTCFDpkSZp2TKUErJHIoyJoWEeKEMff/W1urcM+x99v6ds/+rbrd/v33W+uy911ln7b3XXkF5+Qj4EfgK+BPYF/gd+AO4C3gH+KKE2RUllDgdVwJXROhUx54DbgE+iWjf2qQ0vIyEkT84Eupp4AHgkcj2/zdbBHxQLnc5BbgoAeoq4BlzrcHHSsG/apYOabF4FrAzcAKw/SDRfw1eAx4C7uhrXwLe+7lGTn93iWZjR0AudZR15i9g7Y4HvgceM7d6s9mmBLxeunNMcao+deRv4FDgVOtUV8efBB4E1Ilv1SjVWJtiuYxGUhFkT+C3SNdoayY9K4HTe3R8B9wGPJoLLx/+0gx9DOyRAd58VB052jqyeZveXHi5i9xGci9wRkH4oEoDpJk4CNjQPnpLv+XCB5eRrqGXtVS/jgAOAN7Ngd8C+MERnQncXYowRk8O/Nn24gQ7ObpiWNdok2PwZ2ATp3En4PNRFCMfGguvSBC+qsG0vq76Mk4mpeAft8//ZOA50eYy4BpHqhxEOcykMnbkHwZOcqQnj0lpc3s6Bn5T4FNAoTLIDpYe5PIkPT8GXpnh286KlnX7JVkt1HgMvNxFbhNkFn8f+8I216lTpQVFPlJvAAc6TbvnLKJzPGiM23xgebvslk6Dk/qSCt9Mxq4HLk6yWLBxKrxM/+PsT54S+L6nwmtBEPKXlwDl1rNJKryPNFrVnzgb+YiVlFbwxxrwrC4zJs7/Amxs8EoT9PdskuI2Pod/fWCPZZIOpcCn7IxVB68oo2gjmd3fU33ex/eUGVvYLMRC7A28ZxRV+HvKyF8IKBWQzJZFNqcwduS9v+8DvL8wX0hQHAsf/P3Xxl5NgqnyTWPg/U7wfQPbz+UJezTGwB8HPGE6dL50w6SEmfD+41SNv8dGm5CMfZ1wIDbJ5MS4jY5rtgOq8vfYkdcZ0wZ2nlqNv8fA+0yyinzG++OQ2/gv61Dbpp/7Aor1gZetkEIbsloHqHhiPXtIBRbaefvM/o86URwCkptcAGi7Q/lNrMQWULTpi04/huBDWjDmZU0toAgdkc22MoA1OjoEH9KCnI+TNmb1b3/gcGDrgem7FLg2Zor74H1aUPJlVXaq6KV6A+ldB9D51ovAh3aeG8Peew7r04JZ9t+HetA38uGlqyqTjA2VOo5XEUNqpBkasGK/9418TqQpBtinqA8+RJrouDsJsTPSBa+TbUUAiSo55ELVSRe83y0oGSaLDkAXvE/Ihj5kRYFSlHWBhYSs2jCpTnbBh4Ssmg2mthnpgg9LvxsBzUKV0gWvTaW9ao40fW7zDbAtcDygWahS2ka+6qXfUG4T4GerKYid5raR1/HkCwusk4xlG2zXBn81cDlwK3DuoIYZG7TB32ObqVrl95aAz8i9ZLoNXrXBWgLOUnqVMiBN+GUTadpG3sPvZrVkKYMxadvmyJ8H3GTFblp0Vy1N+FAvuahy8qKD0YQP9ZLXAZcUtbQAZU34UIKVs0O2AMx2lR5eVxtUhb2RXWDRvYyqxcP7KqZq161didkq4E77Uenw0nWemsWPfEgLZiuvTR0oD68LhsdYAVzU/niqsdLtPXzYIVsWMd6nB74ye9nB3w6stml9xe7qlZ7l4vqC2/gDMO3ZpNxhLQ4VqzDA3w+cZg8tixgffF5npFqAhGsUywr+MEB1wZKuknKtrDaz2dHWty6dq7Nb2nO65inZykKt6hXWsuulqq8PUvQeldymeWFLt3+fAnax3/TRUjRKFV3SVQeaoo791KLzZuD8FCOCPxJ4PuWhBbZNclnBK4t8C9i1MFTXyHeZGTXyUraNnVDrJo6/vKXf5OPPAusC8u0cn5e+UBShi7lZ78K/AAr80OsRGx0AAAAASUVORK5CYII=\",\r\n                \"date\": \"2020-12-13T11:38:04.271Z\"\r\n            },\r\n            \"date\": \"2020-12-13T11:38:09.781Z\"\r\n        }\r\n    },\r\n    \"employeeFactId\": \"{{employeeFactId}}\",\r\n    \"modelVersion\": \"2\",\r\n    \"recordVersion\": \"2\",\r\n    \"status\": \"Section1_Complete\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ALT_HOST}}/business/eev/form-i9/v1/packets/{{packetId}}/forms/{{i9DocumentId}}/section1",
+					"host": [
+						"{{ALT_HOST}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"packets",
+						"{{packetId}}",
+						"forms",
+						"{{i9DocumentId}}",
+						"section1"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_Section2",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "0bNjPtys2Iv1oq1qkfg82JJGjetSIp3OWHQxS1GAyLq9LdcRkuMH65E1gWb4KsJKEH7wZ/O/AeXU+uXet4LRPxHTS2qfj/BxwDON4Tl0QQhAoF8lQ/kGrGRqqdLMxMrh4XGC/kBqPTFycEU8HEkz5LAJIJJVKCnHG06RJ1b4u+xh3/xMsmPvcAX4Zut+4N7ubGwZL4l+gP8f2m4JIGvxDVqbAULNZcrLH+ra",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"status\": \"Section2_Complete\",\r\n  \"employeeFactId\": \"{{employeeFactId}}\",\r\n  \"formData\": {\r\n    \"sectionTwo\": {\r\n      \"hireDate\": \"2021-04-23\",\r\n      \"additionalInformation\": [],\r\n      \"employerRepresentative\": {\r\n        \"firstName\": \"John\",\r\n        \"lastName\": \"Smith\",\r\n        \"title\": \"Manager\"\r\n      },\r\n      \"employee\": {\r\n        \"address\": \"{{employee_address}}\",\r\n        \"city\": \"{{employee_city}}\",\r\n        \"state\": \"{{employee_state}}\",\r\n        \"zipCode\": \"{{employee_zipcode}}\",\r\n        \"dateOfBirth\": \"{{employee_dob}}\",\r\n        \"email\": \"{{employee_first_name}}@test.com\",\r\n        \"lastName\": \"{{employee_last_name}}\",\r\n        \"firstName\": \"{{employee_first_name}}\",\r\n        \"citizenshipImmigrationStatus\": \"US_CITIZEN\"\r\n      },\r\n      \"organization\": {\r\n        \"address\": \"{{org_address}}\",\r\n        \"city\": \"Atlanta\",\r\n        \"state\": \"GA\",\r\n        \"zipCode\": \"30009\",\r\n        \"name\": \"Acme Corp\"\r\n      },\r\n      \"signature\": {\r\n        \"name\": \"{{employee_first_name}}\",\r\n        \"date\": \"2020-12-13T11:38:07.455Z\",\r\n        \"method\": \"IMAGE\",\r\n        \"imageData\": \"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\",\r\n         \"imageType\": \"image/png\"\r\n      },\r\n      \"listA\": {\r\n        \"documentOne\": {\r\n          \"documentId\": \"52A2276A-BDE3-4466-AA9B-D11022F2437F\",\r\n          \"documentNumber\": \"961467055\",\r\n          \"documentTitle\": \"U.S. Passport or U.S. Passport Card\",\r\n          \"expirationDate\": \"2050-10-23\",\r\n          \"issuingAuthority\": \"U.S. Department of State\",\r\n          \"uploadLater\": true\r\n        }\r\n      }\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/business/eev/form-i9/v1/forms/{{i9DocumentId}}/section2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{i9DocumentId}}",
+						"section2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Section2 Upload Later",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"listA\": {\r\n        \"documentOne\": {\r\n            \"documentId\": \"52A2276A-BDE3-4466-AA9B-D11022F2437F\",\r\n            \"documentNumber\": \"961467055\",\r\n            \"documentTitle\": \"U.S. Passport or U.S. Passport Card\",\r\n            \"expirationDate\": \"2050-10-23\",\r\n            \"issuingAuthority\": \"U.S. Department of State\",\r\n            \"frontImageType\": \"image/jpg\",\r\n            \"backImageType\": \"image/jpg\",\r\n            \"frontImageData\": \"/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wgARCAAxAEEDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEC/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB0QoAAAJNDNUzaJNACAAAoAAAAAAP/8QAFBABAAAAAAAAAAAAAAAAAAAAUP/aAAgBAQABBQJ//8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAwEBPwEn/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAgEBPwEn/8QAFBABAAAAAAAAAAAAAAAAAAAAUP/aAAgBAQAGPwJ//8QAFhABAQEAAAAAAAAAAAAAAAAAQBHR/9oACAEBAAE/IT4Km//aAAwDAQACAAMAAAAQEAAAAwIAQAsMMAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAwEBPxAn/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAgEBPxAn/8QAJRAAAgEDAwQCAwAAAAAAAAAAAREhADFBYXGhIDBRgdHwkbHB/9oACAEBAAE/EO0x2Dupjenb3ax1pwSzbznzFWcmz++KwZssvmiU50TvQvcwB/aDiRrLP4UdC1JxPWbexbep1TCcH7vTJDjPHqgTDyPimYi74NXe1n4XPRek/wB0t9sUtTH1UgFo+aWp2x3f/9k=\",\r\n            \"backImageData\": \"/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wgARCAAxAEEDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEC/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB0QoAAAJNDNUzaJNACAAAoAAAAAAP/8QAFBABAAAAAAAAAAAAAAAAAAAAUP/aAAgBAQABBQJ//8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAwEBPwEn/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAgEBPwEn/8QAFBABAAAAAAAAAAAAAAAAAAAAUP/aAAgBAQAGPwJ//8QAFhABAQEAAAAAAAAAAAAAAAAAQBHR/9oACAEBAAE/IT4Km//aAAwDAQACAAMAAAAQEAAAAwIAQAsMMAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAwEBPxAn/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAgEBPxAn/8QAJRAAAgEDAwQCAwAAAAAAAAAAAREhADFBYXGhIDBRgdHwkbHB/9oACAEBAAE/EO0x2Dupjenb3ax1pwSzbznzFWcmz++KwZssvmiU50TvQvcwB/aDiRrLP4UdC1JxPWbexbep1TCcH7vTJDjPHqgTDyPimYi74NXe1n4XPRek/wB0t9sUtTH1UgFo+aWp2x3f/9k=\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/business/eev/form-i9/v1/forms/{{i9DocumentId}}/section2/documents",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{i9DocumentId}}",
+						"section2",
+						"documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_Section3",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"formData\": {\r\n        \"sectionThreeList\": [\r\n            {\r\n                \"isNameChange\": true,\r\n                \"isRehire\": true,\r\n                \"isReverification\": false,\r\n                \"firstName\": \"Derek\",\r\n                \"middleInitial\": \"L\",\r\n                \"lastName\": \"Sanders\",\r\n                \"projectedStartDate\": \"2020-06-23\",\r\n                \"employerSignature\": {\r\n                    \"method\": \"IMAGE\",\r\n                    \"date\": \"2020-06-24\",\r\n                    \"name\": \"Target\",\r\n                    \"imageType\": \"image/png\",\r\n                    \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAACwAAAA8CAYAAAAdUliaAAAEyElEQVRoQ9WaWejmUxjHP5MLNyiKrGWfZC5sMbiwjAspkq2QZUaRZWYooVxYyoWyF2WyU8QFUSjFKKEYbuyyZLtACCNK0Ufn/D3vmfN7/+d9vcvPc/Uuzznn+3vOsz+/JfxL76SP9wDvAi+E/3rzcUlCci1wTQXVd8ATwBvA58D6eSPPgMWhhPdtAPQ+8CxweQPvxFkiYDffFTgXOAI4cpHTfgE2ANfNUvIl4BKjoM9JDzEM/zrgKeC5iYu02HAxwJl9b+B84BJg8w5Q6vvNwI3TBN0KOGK4CTg5qU8N20PA7cBb0wBeGp1nLGs86FTgLOD4Dv7bgJeTqjRuuThbza1pRLq5Vjo9qUuXkaoiz0/KMDNgPcP9CeFK4IFWtIFP4JcBewJbF+s/BB4DlPpPY+y9sGSSgCOOO4GLKsDeTGr0wbigM+CXgt8dVSW6ztanX58ARp5fgVVJTfTlI1EG/BqwPK3Uwi8daZfhzGuSYR5TsI2l2xnwD0Hv3msM0aM801aA7vBEYNuw0NxEARl0migD/qvgHsc/Nx0IvAocGpifTrnJ3S0bZGCfFYHAJEhJT4uizXjGH0nXzQyHUs3oXLAdYKidJhl4Hi8OUEUeHOZWM+BXgMPD4vOA+6aJFsh6rf/eojhL0MaGTahLwpNybS3PrKQtHmIurk0dXYuOXRWHV3NUy2kT4tFn6/6MlJHuAi6OP2TAOvJ7wx+GZkP0LEkVuRq4YhjoDFjf+G1gfKQSoWYFXt01r94mHHgBYJFABrwD8E1g2FgxhFkB9pxaUbybhXAMELMMHi0Pf2uRIrwIrIiAY/CwpPeJ5kmWZaalkZb2WcICNVxbS2Za2XfAVjGG8UzrI2C9RM6kDMuG53mT/llVzdRroxNkCXhDlLDly4HpUezoHDRv8VYAb+yzl8jyGnC3fTc6QQ/k6v8HwAOuLQL+Etg53cNXwC490GEhDFQnEfDPwJYJpOW32VMfKFb0C8mPwPqWS2RhfQTslb/03UvY9vo4XnPfAdtsiQn9ugg49gv6kK2VeYSCHpr8WNPNa2pkxDXyRnIUt6zLrcm4B/DpHNyE1Y9jtp2Ks00VBnKJvri1sisk7oW2Q98iXa0bNNAjyYB3Bz6JeeccSqSakTlGO67m1sq805La0nqW5Mgitqeq6UFfOj+rgTsK6RwGGJYHKAO2JXRh+Mf2kL9NmyzJVIVHgc3CYZ2tsgzYctqyOtNSwBg+LXKWbbdUyW5fHPIwcHbXwbPuwB+cmn5nVgD9BjwDXJVedahiFvB+wNst1/EfxJ2v3p5z2Qt22x8T0H/6Z8NIwGUfa9KtVvd3xKvrLMl2wi3A661pgIDLyDKpZvYBwNqKPipNXxIxE3MgMxIJ+Gtgx7BqH2DsSWUabWlUtVmfQ5fTRkJYMAvY6/KVAcmriSOp1r19h8J1VwLHVhaZRGn9E5s12zw+YYyhuB3Ok4AzAFWgpO+Te1wB/N769IsZ3Tj7ONHsuva831TCe8zWvNL9UxNQf/hFmNWZa6jbhwCnDBnt5tfGHDlsElbHkUy5JgOuZUryWipJAu4ird6HuyG94zYJXJ17dCU/LYf6To+SfHJYZGrZaBSeDNirNtmpGU7eT6P5M73qpXvShzojnin9DXDX8hMmNuReAAAAAElFTkSuQmCC\"\r\n                },\r\n                \"formRevDate\": \"i9v071717\"\r\n            },\r\n             {\r\n                \"isNameChange\": true,\r\n                \"isRehire\": true,\r\n                \"isReverification\": false,\r\n                \"firstName\": \"Derekk\",\r\n                \"middleInitial\": \"L\",\r\n                \"lastName\": \"Sanders\",\r\n                \"projectedStartDate\": \"2020-06-23\",\r\n                \"employerSignature\": {\r\n                    \"method\": \"IMAGE\",\r\n                    \"date\": \"2020-07-16T11:38:07.455Z\",\r\n                    \"name\": \"Target\",\r\n                    \"imageType\": \"image/png\",\r\n                    \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAACwAAAA8CAYAAAAdUliaAAAEyElEQVRoQ9WaWejmUxjHP5MLNyiKrGWfZC5sMbiwjAspkq2QZUaRZWYooVxYyoWyF2WyU8QFUSjFKKEYbuyyZLtACCNK0Ufn/D3vmfN7/+d9vcvPc/Uuzznn+3vOsz+/JfxL76SP9wDvAi+E/3rzcUlCci1wTQXVd8ATwBvA58D6eSPPgMWhhPdtAPQ+8CxweQPvxFkiYDffFTgXOAI4cpHTfgE2ANfNUvIl4BKjoM9JDzEM/zrgKeC5iYu02HAxwJl9b+B84BJg8w5Q6vvNwI3TBN0KOGK4CTg5qU8N20PA7cBb0wBeGp1nLGs86FTgLOD4Dv7bgJeTqjRuuThbza1pRLq5Vjo9qUuXkaoiz0/KMDNgPcP9CeFK4IFWtIFP4JcBewJbF+s/BB4DlPpPY+y9sGSSgCOOO4GLKsDeTGr0wbigM+CXgt8dVSW6ztanX58ARp5fgVVJTfTlI1EG/BqwPK3Uwi8daZfhzGuSYR5TsI2l2xnwD0Hv3msM0aM801aA7vBEYNuw0NxEARl0migD/qvgHsc/Nx0IvAocGpifTrnJ3S0bZGCfFYHAJEhJT4uizXjGH0nXzQyHUs3oXLAdYKidJhl4Hi8OUEUeHOZWM+BXgMPD4vOA+6aJFsh6rf/eojhL0MaGTahLwpNybS3PrKQtHmIurk0dXYuOXRWHV3NUy2kT4tFn6/6MlJHuAi6OP2TAOvJ7wx+GZkP0LEkVuRq4YhjoDFjf+G1gfKQSoWYFXt01r94mHHgBYJFABrwD8E1g2FgxhFkB9pxaUbybhXAMELMMHi0Pf2uRIrwIrIiAY/CwpPeJ5kmWZaalkZb2WcICNVxbS2Za2XfAVjGG8UzrI2C9RM6kDMuG53mT/llVzdRroxNkCXhDlLDly4HpUezoHDRv8VYAb+yzl8jyGnC3fTc6QQ/k6v8HwAOuLQL+Etg53cNXwC490GEhDFQnEfDPwJYJpOW32VMfKFb0C8mPwPqWS2RhfQTslb/03UvY9vo4XnPfAdtsiQn9ugg49gv6kK2VeYSCHpr8WNPNa2pkxDXyRnIUt6zLrcm4B/DpHNyE1Y9jtp2Ks00VBnKJvri1sisk7oW2Q98iXa0bNNAjyYB3Bz6JeeccSqSakTlGO67m1sq805La0nqW5Mgitqeq6UFfOj+rgTsK6RwGGJYHKAO2JXRh+Mf2kL9NmyzJVIVHgc3CYZ2tsgzYctqyOtNSwBg+LXKWbbdUyW5fHPIwcHbXwbPuwB+cmn5nVgD9BjwDXJVedahiFvB+wNst1/EfxJ2v3p5z2Qt22x8T0H/6Z8NIwGUfa9KtVvd3xKvrLMl2wi3A661pgIDLyDKpZvYBwNqKPipNXxIxE3MgMxIJ+Gtgx7BqH2DsSWUabWlUtVmfQ5fTRkJYMAvY6/KVAcmriSOp1r19h8J1VwLHVhaZRGn9E5s12zw+YYyhuB3Ok4AzAFWgpO+Te1wB/N769IsZ3Tj7ONHsuva831TCe8zWvNL9UxNQf/hFmNWZa6jbhwCnDBnt5tfGHDlsElbHkUy5JgOuZUryWipJAu4ird6HuyG94zYJXJ17dCU/LYf6To+SfHJYZGrZaBSeDNirNtmpGU7eT6P5M73qpXvShzojnin9DXDX8hMmNuReAAAAAElFTkSuQmCC\"\r\n                },\r\n                \"formRevDate\": \"i9v071717\",\r\n                \"timestamp\": \"1585728574\"\r\n            }\r\n        ]\r\n    },\r\n    \"status\": \"section3_complete\",\r\n    \"recordVersion\": 3,\r\n    \"employeeId\": \"a294befa-2ce6-4562-8d61-d164c4f165f2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/section3",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"section3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_FormData_Foreign",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"isMinor\": false,\r\n\t\"ssnApplied\": false,\r\n\t\"ssnRefused\": false,\r\n  \"validListBDocs\": false,\r\n\t\"sectionOne\": {\r\n    \"signature\": {\r\n      \"name\": \"Derek Preparer\",\r\n      \"date\": \"2020-07-16T11:38:07.455Z\",\r\n      \"method\": \"IMAGE\",\r\n      \"imageData\": \"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\",\r\n        \"imageType\": \"image/png\"\r\n        },\r\n\t  \"date\": \"2020-07-16T11:38:07.455Z\",\r\n\t  \"employeeInfo\": {\r\n\t    \"firstName\": \"John\",\r\n\t    \"middleInitial\": \"L\",\r\n\t    \"lastName\": \"Sanderson\",\r\n\t    \"dateOfBirth\": \"1991-11-09\",\r\n\t    \"otherLastName\": \"James\",\r\n\t    \"socialSecurityNumber\": \"888888888\",\r\n\t    \"state\": \"MO\",\r\n\t    \"telephoneNumber\": \"4888888888\",\r\n\t    \"zipCode\": \"31223\",\r\n\t    \"address\": \"Opolska 114\",\r\n\t    \"apartmentNumber\": \"12345\",\r\n\t    \"city\": \"Krakow\",\r\n\t    \"email\": \"test@test.com\"\r\n\t  },\r\n    \"attestation\": {\r\n      \"isLawfulPermanentResident\": false,        \r\n      \"isNonCitizenNational\": false,        \r\n      \"isUnitedStatesCitizen\": false,        \r\n      \"lawfulPermanentResidentInfo\": null, \r\n      \"isAlienAuthorizedToWork\": true,\r\n      \"alienAuthorizedToWorkData\": {\r\n        \"expirationDate\": \"2049-11-20\",\r\n        \"alienRegistrationNumber\": null,\r\n        \"foreignPassportObject\": {\r\n          \"countryOfIssuance\": \"Brazil\",\r\n          \"number\": \"012345678A1\"\r\n        },\r\n        \"formI94AdmissionNumber\": \"\"\r\n      }\r\n    },\r\n\t  \"preparers\": [\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n        \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"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\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    },\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n          \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"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\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    }\r\n\t  ]\r\n\t},\r\n\t\"sectionTwo\": {\r\n      \"hireDate\": \"2020-04-23\",\r\n      \"additionalInformation\": [],\r\n      \"employerRepresentative\": {\r\n        \"firstName\": \"John\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"title\": \"\"\r\n      },\r\n      \"employee\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\",\r\n        \"dateOfBirth\": \"2001-11-20\",\r\n        \"email\": \"test@test.com\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"firstName\": \"John\",\r\n        \"title\": \"\",\r\n        \"citizenshipImmigrationStatus\": \"ALIEN_AUTHORIZED_TO_WORK\",\r\n        \"middleInitial\": \"L\"\r\n      },\r\n      \"organization\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\"\r\n      },\r\n      \"signature\": {\r\n        \"method\": \"IMAGE\",\r\n        \"name\": \"James Smith\",\r\n        \"date\": \"2020-04-23T14:00:57.635Z\",\r\n        \"imageType\": \"image/png\",\r\n        \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAABZUlEQVRIS72VvUpEMRCFv7UXbNVGRHwFW23sLHdbBQtB8Xex1i12QRAFEUFRbBRBH8JtLAUraws79R3kaAZCyN297k0cCJeb4nwzkzlJjd/Yd8v95v/UgEdgFngADoDn/FjwweJ9AGf/Ub3Aiktg2au0C6wBr7mqN7D074F6ALoAVnLAffAU0InA34EdNwPJcvDBEp0ErtywhRC1Xx24S0EPwdKcAHaB1QLAOnBaFR4Dm6a8vVcAeAI2q1ivF1jMEeAImAfGI0kMPHz9wMYaBtqA2hzGpzsWXUCloyzYBHX+1z2Gb64s+a9g05XfbfmsL2ALuOmXwKBg6Y4CC8B5ACl17VYB+zx5uwEMeZs6khPgJVZ9KrC0i9rfij06KcHWfl27S0GVx676N9tPDTZdve+3wJiXgOym4/iJXGBpzwDNyKMjy3VzggWX7zeAba9yTX0jN9h4uvcXXSLZWx26aBo4dN7nG70hNFW0Ux2HAAAAAElFTkSuQmCC\"\r\n      },\r\n      \"listA\": {\r\n        \"documentOne\": {\r\n          \"documentId\": \"C4468602-E235-4934-A564-2BB67F1A1B05\",\r\n          \"documentNumber\": \"961467055\",\r\n          \"documentTitle\": \"U.S. Passport or U.S. Passport Card\",\r\n          \"expirationDate\": \"2050-10-23\",\r\n          \"issuingAuthority\": \"U.S. Department of State\"\r\n        }\r\n      }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/formdata",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"formdata"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_FormData_Authorized",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"isMinor\": false,\r\n\t\"ssnApplied\": false,\r\n\t\"ssnRefused\": false,\r\n  \"validListBDocs\": false,\r\n\t\"sectionOne\": {\r\n    \"signature\": {\r\n      \"name\": \"Derek Preparer\",\r\n      \"date\": \"2020-07-16T11:38:07.455Z\",\r\n      \"method\": \"IMAGE\",\r\n      \"imageData\": \"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\",\r\n        \"imageType\": \"image/png\"\r\n        },\r\n\t  \"date\": \"2020-07-16T11:38:07.455Z\",\r\n\t  \"employeeInfo\": {\r\n\t    \"firstName\": \"John\",\r\n\t    \"middleInitial\": \"L\",\r\n\t    \"lastName\": \"Sanderson\",\r\n\t    \"dateOfBirth\": \"1991-11-09\",\r\n\t    \"otherLastName\": \"James\",\r\n\t    \"socialSecurityNumber\": \"888888888\",\r\n\t    \"state\": \"MO\",\r\n\t    \"telephoneNumber\": \"4888888888\",\r\n\t    \"zipCode\": \"31223\",\r\n\t    \"address\": \"Opolska 114\",\r\n\t    \"apartmentNumber\": \"12345\",\r\n\t    \"city\": \"Krakow\",\r\n\t    \"email\": \"test@test.com\"\r\n\t  },\r\n    \"attestation\": {\r\n      \"isLawfulPermanentResident\": false,        \r\n      \"isNonCitizenNational\": false,        \r\n      \"isUnitedStatesCitizen\": false,        \r\n      \"lawfulPermanentResidentInfo\": null, \r\n      \"isAlienAuthorizedToWork\": true,\r\n      \"alienAuthorizedToWorkData\": {\r\n        \"expirationDate\": \"2049-11-20\",\r\n        \"alienRegistrationNumber\": \"1234567\"\r\n      }\r\n    },\r\n\t  \"preparers\": [\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n        \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"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\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    },\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n          \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"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\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    }\r\n\t  ]\r\n\t},\r\n\t\"sectionTwo\": {\r\n      \"hireDate\": \"2020-04-23\",\r\n      \"additionalInformation\": [],\r\n      \"employerRepresentative\": {\r\n        \"firstName\": \"John\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"title\": \"\"\r\n      },\r\n      \"employee\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\",\r\n        \"dateOfBirth\": \"2001-11-20\",\r\n        \"email\": \"test@test.com\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"firstName\": \"John\",\r\n        \"title\": \"\",\r\n        \"citizenshipImmigrationStatus\": \"ALIEN_AUTHORIZED_TO_WORK\",\r\n        \"middleInitial\": \"L\"\r\n      },\r\n      \"organization\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\"\r\n      },\r\n      \"signature\": {\r\n        \"method\": \"IMAGE\",\r\n        \"name\": \"James Smith\",\r\n        \"date\": \"2020-04-23T14:00:57.635Z\",\r\n        \"imageType\": \"image/png\",\r\n        \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAABZUlEQVRIS72VvUpEMRCFv7UXbNVGRHwFW23sLHdbBQtB8Xex1i12QRAFEUFRbBRBH8JtLAUraws79R3kaAZCyN297k0cCJeb4nwzkzlJjd/Yd8v95v/UgEdgFngADoDn/FjwweJ9AGf/Ub3Aiktg2au0C6wBr7mqN7D074F6ALoAVnLAffAU0InA34EdNwPJcvDBEp0ErtywhRC1Xx24S0EPwdKcAHaB1QLAOnBaFR4Dm6a8vVcAeAI2q1ivF1jMEeAImAfGI0kMPHz9wMYaBtqA2hzGpzsWXUCloyzYBHX+1z2Gb64s+a9g05XfbfmsL2ALuOmXwKBg6Y4CC8B5ACl17VYB+zx5uwEMeZs6khPgJVZ9KrC0i9rfij06KcHWfl27S0GVx676N9tPDTZdve+3wJiXgOym4/iJXGBpzwDNyKMjy3VzggWX7zeAba9yTX0jN9h4uvcXXSLZWx26aBo4dN7nG70hNFW0Ux2HAAAAAElFTkSuQmCC\"\r\n      },\r\n      \"listA\": {\r\n        \"documentOne\": {\r\n          \"documentId\": \"C4468602-E235-4934-A564-2BB67F1A1B05\",\r\n          \"documentNumber\": \"961467055\",\r\n          \"documentTitle\": \"U.S. Passport or U.S. Passport Card\",\r\n          \"expirationDate\": \"2050-10-23\",\r\n          \"issuingAuthority\": \"U.S. Department of State\"\r\n        }\r\n      }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/formdata",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"formdata"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_FormData_Lawful",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"isMinor\": false,\r\n\t\"ssnApplied\": false,\r\n\t\"ssnRefused\": false,\r\n  \"validListBDocs\": false,\r\n\t\"sectionOne\": {\r\n    \"signature\": {\r\n      \"name\": \"Derek Preparer\",\r\n      \"date\": \"2020-07-16T11:38:07.455Z\",\r\n      \"method\": \"IMAGE\",\r\n      \"imageData\": \"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\",\r\n        \"imageType\": \"image/png\"\r\n        },\r\n\t  \"date\": \"2020-07-16T11:38:07.455Z\",\r\n\t  \"employeeInfo\": {\r\n\t    \"firstName\": \"John\",\r\n\t    \"middleInitial\": \"L\",\r\n\t    \"lastName\": \"Sanderson\",\r\n\t    \"dateOfBirth\": \"1991-11-09\",\r\n\t    \"otherLastName\": \"James\",\r\n\t    \"socialSecurityNumber\": \"888888888\",\r\n\t    \"state\": \"MO\",\r\n\t    \"telephoneNumber\": \"4888888888\",\r\n\t    \"zipCode\": \"31223\",\r\n\t    \"address\": \"Opolska 114\",\r\n\t    \"apartmentNumber\": \"12345\",\r\n\t    \"city\": \"Krakow\",\r\n\t    \"email\": \"test@test.com\"\r\n\t  },\r\n    \"attestation\": {\r\n      \"isLawfulPermanentResident\": true,    \r\n      \"isAlienAuthorizedToWork\": false,    \r\n      \"isNonCitizenNational\": false,        \r\n      \"isUnitedStatesCitizen\": false,        \r\n      \"lawfulPermanentResidentInfo\": {\r\n         \"alienRegistrationNumber\": \"1234567\"\r\n      }\r\n    },\r\n\t  \"preparers\": [\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n        \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"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\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    },\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n          \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAFsAAABRCAYAAAC9rdr/AAAGn0lEQVR4Xu2dach1UxTHf2+SKfOQqQwZMpMpfDCUD+Q1fPCiEBIhsw98QqQkMkSSMUKGTBkSeZV5yBDKkCEiZI6iRP/H3sd69j3Tfe7Z95579151u899nnPXOfu311ln7bXX3s8i4sl7TvUDwEvA0/FONR2aF0W6zIuACwPdbwJ6fQPcA3wY6dy9VRsLthosy96mpuUC/xvwPHA38FFvKXV0YTFh6xLXA04G9gY2dq+6S78YeNJZ/c8dtbE3amLDDhu6KXCsg79PA4WHAb0eAWYC/LhhW76y9OMc+JWBnWvgvw3c7sB/3htTHfJCJgk7vNQDgcuBbRvaMLXg+wTbM14NONS9DmkAv9RZ/B1DGtlEDu8j7BCEB6/3VSsoyadfDQh6b93MNMC2fHd0fl7gNyoBL+jy7df0Efq0wQ4fsIJ+Vgn4X13sfrMbSE3EbYQnnWbYZRavcHKHoJHy61cArwPfT5L6rMC2DPcFjgS2AGws/wxwE3D/pIDPImzPcg3gjIoBlEaq1wI/jhP8LMO2HA8CTgIWm18qEXaji2LGwjwV2B6m3MqpwOGG7vvABcBjsYmnBttCvxTYywCWL9fv3o0FPVXYnufpznf7z78Dtzpf3znz1GF7oJrsOBNQqkDyJXAVoDyMQsdOJMP+H+PabnZJft1PesifK2pRyDiyZNiDCAX9viBG14TGJcDLoxDPsKvpycLDh6jic7mcBUmG3YwtnLzWSHT/5q8NHpFht6O2GXBZEJ+fB1zZ7uv/HZVhD0MLzgXOB9ZyX7vTzam20pJht8I0cNBz5gGqwZCm81SaUSsZdhOh8r8rYpEv19Dfi5Je19Wpy7AXBtt/KxyBLqlL4WbYo8HWtw92JRZeU2V4mGGPDlsaFJPLj3s53s2FztOeYXcDW1psPP4tsG6oOsPuDrY0vQjs6VQqn6I6x0K6hO1vI80Bpiw2LBSLImvYFWx7C42UP5iBXpI1a7pNItCF8XUBW1NMypJJFOAr/Eld/jEACuseFbbyvVsbxbu0GUkl0BMyPj/PWdzpo8B+C1A5mJd5t0wCQOuaeADwhDtABjlXmbtQ2I8GZQHSdfY4ywKmoDN/AFS7IpdyguLuhcAuW5yk9TBbTgGAcV7iq8Bu9lk2LGwb1vgL/wTYfJytmJJzHQ0oBetl8TCwb3PlumFb58WSUwJiXJepsggN3SVL28K24Z290Ay6vtu0TugNf0hb2KqLU1WoldQHL23vjiIMbAM7fCB+BZwzydLbtq3syXHFc64J9gpupa7WL3qpTZD3pIF9uoxiNNkEWxZsZ5Cz6xiuGzUr/3Fbn21Dva+BDYY7V/JHa7OEoqinzrJ3BV4zuI4B7koeX3sAA4M/C9svbf7CpQb3cIUpUq8YW0POLM0EtDmCUqyam7Qyb7jux/L+ANUqr+Q+3Asc1Xye5I9QAkqDGLuyQVDmknTWsl8Bdq/BJZ/9FLCmc/qPu+Vu6pTURRO+O7mQeMMAhnL8qqL6NPTZOlAPQS1t02LOJtHSZe2uoJ7TVhUqHvc92fTdPvw93Iajak8UpUlXAZYx+frtnKs4rKYhH9gNbqoekNa5C6DSp5ok0ENT1r9VAyl1glzQd26hp3bLUbrx7xZ7h/jqfzXci36npdL+fX3gD/fZH69j9bP9XHWZ0rW8e8XqdE34iqO2aZqTKth6WOqhKNFacJ9MsRcmq1AZlqr09VDYD1BcmbpoJbEmDgbquKtgX2/q2Bpr2Axd5bQF/k9ALkkdoS2L5GI0Zeb9mbdaWWHZTguKiCSywHAXHX22lu0t2r9X7dygv//izqf35Tq2bLlSWbM2GyuVNm5Ee35oZmYWpa3PllvUXatO8nev3NizrtMebAOnCrYdOcqKCr/TRmk+pr1lr+52H5M/Vo9ukuF1Q6DMslcEfOyskdAp3ZwqaymDbcO+PHLs0EbKYD/kNsPKLqRD0FJVBtsnuzWY0RA0S0cEQth2MHMLcGJH58lqSizbhnwakGhsn6UjAtaytwfecXpz3V5HgK0aCzvXWEcAXAXbV6VqOzblOH6KfO7k1FvL/gtY1qVE10mOxBga7GFbF6JVqsr0ZemYgIf9mdm1vamWpONLSEedwIYLJjPsSP0fwq6alYl0+rTUCraSTUe4Zuv/ydi97tKiEbm1gv2CAax/d6JZ4ywRCAi2XVGQ3UgEyF6lYKvcQLMykoH11hHPnZxqwbZhX4Yd0QQE2y79zQmoyLCtZWefHRm2/YdrNwCnRTxf0qrlRjLsMZnAv+m5EwQv72VyAAAAAElFTkSuQmCC\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    }\r\n\t  ]\r\n\t},\r\n\t\"sectionTwo\": {\r\n      \"hireDate\": \"2020-04-23\",\r\n      \"additionalInformation\": [],\r\n      \"employerRepresentative\": {\r\n        \"firstName\": \"John\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"title\": \"\"\r\n      },\r\n      \"employee\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\",\r\n        \"dateOfBirth\": \"2001-11-20\",\r\n        \"email\": \"test@test.com\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"firstName\": \"John\",\r\n        \"title\": \"\",\r\n        \"citizenshipImmigrationStatus\": \"LAWFUL_PERMANENT_RESIDENT\",\r\n        \"middleInitial\": \"L\"\r\n      },\r\n      \"organization\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\"\r\n      },\r\n      \"signature\": {\r\n        \"method\": \"IMAGE\",\r\n        \"name\": \"James Smith\",\r\n        \"date\": \"2020-04-23T14:00:57.635Z\",\r\n        \"imageType\": \"image/png\",\r\n        \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAABZUlEQVRIS72VvUpEMRCFv7UXbNVGRHwFW23sLHdbBQtB8Xex1i12QRAFEUFRbBRBH8JtLAUraws79R3kaAZCyN297k0cCJeb4nwzkzlJjd/Yd8v95v/UgEdgFngADoDn/FjwweJ9AGf/Ub3Aiktg2au0C6wBr7mqN7D074F6ALoAVnLAffAU0InA34EdNwPJcvDBEp0ErtywhRC1Xx24S0EPwdKcAHaB1QLAOnBaFR4Dm6a8vVcAeAI2q1ivF1jMEeAImAfGI0kMPHz9wMYaBtqA2hzGpzsWXUCloyzYBHX+1z2Gb64s+a9g05XfbfmsL2ALuOmXwKBg6Y4CC8B5ACl17VYB+zx5uwEMeZs6khPgJVZ9KrC0i9rfij06KcHWfl27S0GVx676N9tPDTZdve+3wJiXgOym4/iJXGBpzwDNyKMjy3VzggWX7zeAba9yTX0jN9h4uvcXXSLZWx26aBo4dN7nG70hNFW0Ux2HAAAAAElFTkSuQmCC\"\r\n      },\r\n      \"listA\": {\r\n        \"documentOne\": {\r\n          \"documentTitle\": \"Foreign Passport\",\r\n          \"documentId\": \"C4468602-E235-4934-A564-2BB67F1A1B05\",\r\n          \"isReceipt\": false,\r\n          \"issuingAuthority\": \"FSM\",\r\n          \"documentNumber\": \"1111111\",\r\n          \"expirationDate\": \"2020-08-28\",\r\n          \"receiptExpirationDate\": \"11/25/2020\"\r\n        },\r\n        \"documentTwo\": {\r\n          \"documentId\": \"936FF60C-1F06-4BE4-9A31-E0684D230B0C\",\r\n          \"documentTitle\": \"I-551 printed notation on a Machine-readable immigrant visa\",\r\n          \"documentNumber\": \"12121212121\",\r\n          \"issuingAuthority\": \"U.S. Department of State\",\r\n          \"expirationDate\": \"2020-08-28\"\r\n        }\r\n      }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/formdata",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"formdata"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_Section3Allowances",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/section3-allowances",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"section3-allowances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_PDF",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/documents/v1/document/{{documentApiDocumentId}}/object",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"documents",
+						"v1",
+						"document",
+						"{{documentApiDocumentId}}",
+						"object"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_Attachments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/attachments/{{signatureRef}}",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"attachments",
+						"{{signatureRef}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_ExposingTasks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api.ews.npe.gcp.efx/business/eev/form-i9/v1/packets/{{sourceRefId}}/forms/section1/pending",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"packets",
+						"{{sourceRefId}}",
+						"forms",
+						"section1",
+						"pending"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH_Metadata",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"documentId\": \"tTFjkBjvlscIZTh7HIiN\",\r\n    \"employerId\": \"27733c9f-a64a-417e-9c47-659d16a4bf8a\",\r\n    \"employerLocationId\": \"7e952073-1559-4a89-a4bf-d8abc1497d5f\",\r\n    \"sourceRefId\": \"59dd0fbd-358f-4d16-b54f-f4167bb69071\",\r\n    \"employeeId\": \"793542a7-0bfe-4c2c-a5b1-491eae95ddfb\",\r\n    \"sourceId\": \"packet-ui-I9ANYWHERE\",\r\n    \"projectedStartDate\": \"2020-07-28\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/metadata",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"metadata"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH_Section1",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"changes\": [\r\n    {\r\n      \"path\": \"formData.sectionOne.employeeInfo.firstName\",\r\n      \"value\": \"test\"\r\n    }\r\n  ],\r\n  \"preparers\": [\r\n    {\r\n      \"preparerId\": -2146811331,\r\n      \"address\": \"Opolskass\",\r\n      \"city\": \"Warsawss\",\r\n      \"firstName\": \"Iwankass\",\r\n      \"lastName\": \"Smithss\",\r\n      \"state\": \"DC\",\r\n      \"zipCode\": \"12345\",\r\n      \"signature\": {\r\n        \"method\": \"IMAGE\",\r\n        \"name\": \"James Smithsss\",\r\n        \"date\": \"2020-04-25T14:00:57.635Z\",\r\n        \"imageType\": \"image/png\",\r\n        \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAABZUlEQVRIS72VvUpEMRCFv7UXbNVGRHwFW23sLHdbBQtB8Xex1i12QRAFEUFRbBRBH8JtLAUraws79R3kaAZCyN297k0cCJeb4nwzkzlJjd/Yd8v95v/UgEdgFngADoDn/FjwweJ9AGf/Ub3Aiktg2au0C6wBr7mqN7D074F6ALoAVnLAffAU0InA34EdNwPJcvDBEp0ErtywhRC1Xx24S0EPwdKcAHaB1QLAOnBaFR4Dm6a8vVcAeAI2q1ivF1jMEeAImAfGI0kMPHz9wMYaBtqA2hzGpzsWXUCloyzYBHX+1z2Gb64s+a9g05XfbfmsL2ALuOmXwKBg6Y4CC8B5ACl17VYB+zx5uwEMeZs6khPgJVZ9KrC0i9rfij06KcHWfl27S0GVx676N9tPDTZdve+3wJiXgOym4/iJXGBpzwDNyKMjy3VzggWX7zeAba9yTX0jN9h4uvcXXSLZWx26aBo4dN7nG70hNFW0Ux2HAAAAAElFTkSuQmCC\"\r\n      }\r\n    }\r\n  ],\r\n  \"signature\": {\r\n    \"method\": \"IMAGE\",\r\n    \"name\": \"James Smithss\",\r\n    \"date\": \"2020-04-25T14:00:57.635Z\",\r\n    \"imageType\": \"image/png\",\r\n    \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAABZUlEQVRIS72VvUpEMRCFv7UXbNVGRHwFW23sLHdbBQtB8Xex1i12QRAFEUFRbBRBH8JtLAUraws79R3kaAZCyN297k0cCJeb4nwzkzlJjd/Yd8v95v/UgEdgFngADoDn/FjwweJ9AGf/Ub3Aiktg2au0C6wBr7mqN7D074F6ALoAVnLAffAU0InA34EdNwPJcvDBEp0ErtywhRC1Xx24S0EPwdKcAHaB1QLAOnBaFR4Dm6a8vVcAeAI2q1ivF1jMEeAImAfGI0kMPHz9wMYaBtqA2hzGpzsWXUCloyzYBHX+1z2Gb64s+a9g05XfbfmsL2ALuOmXwKBg6Y4CC8B5ACl17VYB+zx5uwEMeZs6khPgJVZ9KrC0i9rfij06KcHWfl27S0GVx676N9tPDTZdve+3wJiXgOym4/iJXGBpzwDNyKMjy3VzggWX7zeAba9yTX0jN9h4uvcXXSLZWx26aBo4dN7nG70hNFW0Ux2HAAAAAElFTkSuQmCC\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api.ews.npe.gcp.efx/business/eev/form-i9/v1/packets/{{sourceRefId}}/forms/{{documentId}}/section1",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"packets",
+						"{{sourceRefId}}",
+						"forms",
+						"{{documentId}}",
+						"section1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_Query",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/query?employerId=27733c9f-a64a-417e-9c47-659d16a4bf8a&employerLocationId=7e952073-1559-4a89-a4bf-d8abc1497d5f&sourceRefId=59dd0fbd-358f-4d16-b54f-f4167bb69071&employeeId=793542a7-0bfe-4c2c-a5b1-491eae95ddfb&sourceId=packet-ui-I9ANYWHERE&projectedStartDate=2020-07-28",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"query"
+					],
+					"query": [
+						{
+							"key": "employerId",
+							"value": "27733c9f-a64a-417e-9c47-659d16a4bf8a"
+						},
+						{
+							"key": "employerLocationId",
+							"value": "7e952073-1559-4a89-a4bf-d8abc1497d5f"
+						},
+						{
+							"key": "sourceRefId",
+							"value": "59dd0fbd-358f-4d16-b54f-f4167bb69071"
+						},
+						{
+							"key": "employeeId",
+							"value": "793542a7-0bfe-4c2c-a5b1-491eae95ddfb"
+						},
+						{
+							"key": "sourceId",
+							"value": "packet-ui-I9ANYWHERE"
+						},
+						{
+							"key": "projectedStartDate",
+							"value": "2020-07-28"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_I9Form",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseData = pm.response.json();\r",
+							"pm.environment.set(\"documentApiDocumentId\", responseData.documentApiDocumentId);\r",
+							"pm.environment.set(\"signatureRef\", responseData.formData.sectionOne.signature.signatureRef);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/status",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_Query_Audits",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/audits/query?i9Id={{documentId}}",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"audits",
+						"query"
+					],
+					"query": [
+						{
+							"key": "i9Id",
+							"value": "{{documentId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST_Section1_Confirm",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api.ews.npe.gcp.efx/business/eev/form-i9/v1/packets/{{sourceRefId}}/forms/{{documentId}}/section1/confirm",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"packets",
+						"{{sourceRefId}}",
+						"forms",
+						"{{documentId}}",
+						"section1",
+						"confirm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST_PDF_Env",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"pdfservice-api.enabled\",\r\n    \"value\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/actuator/env",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"actuator",
+						"env"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_PDF_Env",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/actuator/env/pdfservice-api.enabled",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"actuator",
+						"env",
+						"pdfservice-api.enabled"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_History",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-ui.ews.npe.east.gcp.efx//internal/eev/form-i9/v1/forms/{{documentId}}/history",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-ui",
+						"ews",
+						"npe",
+						"east",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"",
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE_Cancel_Packet",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/cancel",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_Section2_Lawful",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"Section2_Complete\",\r\n    \"employeeId\": \"793542a7-0bfe-4c2c-a5b1-491eae95ddfb\",\r\n    \"formData\": {\r\n        \"sectionTwo\": {\r\n            \"additionalInformation\": [],\r\n            \"employerRepresentative\": {\r\n                \"firstName\": \"John\",\r\n                \"lastName\": \"Smith\",\r\n                \"title\": \"Manager\"\r\n            },\r\n            \"employee\": {\r\n                \"address\": \"114 Opolska\",\r\n                \"city\": \"Krakw\",\r\n                \"state\": \"KY\",\r\n                \"zipCode\": \"31406\",\r\n                \"dateOfBirth\": \"2010-01-01\",\r\n                \"email\": \"test@tst.com\",\r\n                \"lastName\": \"Appointment\",\r\n                \"firstName\": \"Derek\",\r\n                \"citizenshipImmigrationStatus\": \"LAWFUL_PERMANENT_RESIDENT\",\r\n                \"middleInitial\": null\r\n            },\r\n            \"organization\": {\r\n                \"address\": \"9H Hrushevskogo str.\",\r\n                \"city\": \"Kyiv\",\r\n                \"name\": \"Sapphire\",\r\n                \"state\": \"AK\",\r\n                \"zipCode\": \"65465\"\r\n            },\r\n            \"hireDate\": \"2020-08-26\",\r\n            \"signature\": {\r\n                \"imageType\": \"image/png\",\r\n                \"method\": \"IMAGE\",\r\n                \"date\": \"2020-08-27T08:14:19.484Z\",\r\n                \"imageData\": \"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\",\r\n                \"name\": \"John Smith\"\r\n            },\r\n            \"date\": \"2020-08-27T08:14:21.233Z\",\r\n            \"listA\": {\r\n                \"documentOne\": {\r\n                    \"documentTitle\": \"Foreign Passport\",\r\n                    \"documentId\": \"C4468602-E235-4934-A564-2BB67F1A1B05\",\r\n                    \"isReceipt\": false,\r\n                    \"issuingAuthority\": \"FSM\",\r\n                    \"documentNumber\": \"1111111\",\r\n                    \"expirationDate\": \"2020-08-28\",\r\n                    \"receiptExpirationDate\": \"11/25/2020\"\r\n                },\r\n                \"documentTwo\": {\r\n                    \"documentId\": \"936FF60C-1F06-4BE4-9A31-E0684D230B0C\",\r\n                    \"documentTitle\": \"I-551 printed notation on a Machine-readable immigrant visa\",\r\n                    \"documentNumber\": \"12121212121\",\r\n                    \"issuingAuthority\": \"U.S. Department of State\",\r\n                    \"expirationDate\": \"2020-08-28\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/section2",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"section2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_Section2_AlienI94",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"Section2_Complete\",\r\n    \"employeeFactId\": \"793542a7-0bfe-4c2c-a5b1-491eae95ddfb\",\r\n    \"formData\": {\r\n        \"sectionTwo\": {\r\n            \"additionalInformation\": [],\r\n            \"employerRepresentative\": {\r\n                \"firstName\": \"John\",\r\n                \"lastName\": \"Smith\",\r\n                \"title\": \"\"\r\n            },\r\n            \"employee\": {\r\n                \"address\": \"114 Opolska\",\r\n                \"city\": \"Krakw\",\r\n                \"state\": \"ID\",\r\n                \"zipCode\": \"31406\",\r\n                \"dateOfBirth\": \"1991-11-09\",\r\n                \"socialSecurityNumber\": \"111111111\",\r\n                \"email\": \"test@test.com\",\r\n                \"lastName\": \"Appointment\",\r\n                \"firstName\": \"Derek\",\r\n                \"citizenshipImmigrationStatus\": \"ALIEN_AUTHORIZED_TO_WORK\",\r\n                \"middleInitial\": null\r\n            },\r\n            \"organization\": {\r\n                \"address\": \"polska 114\",\r\n                \"city\": \"krakow\",\r\n                \"name\": \"Phoenix\",\r\n                \"state\": \"AK\",\r\n                \"zipCode\": \"12345\"\r\n            },\r\n            \"hireDate\": \"2020-08-28\",\r\n            \"signature\": {\r\n                \"imageType\": \"image/png\",\r\n                \"method\": \"IMAGE\",\r\n                \"date\": \"2020-08-27T08:45:32.384Z\",\r\n                \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAJUAAAA7CAYAAABytMjRAAAGBElEQVR4Xu2dPcgeRRDH/ykilkZRERTUyi+IoogfhaZQJCha+AFBUBsLEdTKgIURUkQsVCSFlVoJ2kS0UBBMQLBRUTApBFHRym8LC7Uw/MwOrOe9d7fPu3e3ezcLx/vAuzc7O/t/ZmZnZ+fZIW8ugbwSOHdHXnpObaUSOF/S3ZIek3Shg2qlKMgw7asl3SHpMkn3xPQcVBmkuzISAOhySU835n1c0ps8DqqVIWLD6d4siWcv5k3S2ZI+lfSupL8lvSHphNF2UG0o5ZW8BoAekPRgANOPQRsdDX9bxeCgWgk6EqcJmHC6AdMZkv6Q9JKk9yQBqM7moOqT0Lr+3wTT55IOSDqSIgYHVYq0ltsXbYRmAkC0Y+Fzr1ZqE4mDarlAGTozgITfhJZ6S9ILQ0xcF3FABVG2h89ESB3KkPerVwJ3SXo+gAnN9Likz3JMB1D9ExFyzZVDqmXTIDSAEuEvPhNg2sjMbTXNWFPR5xxJbBu9LU8CgAjNdGUAU7IDPlQkTVAdlvTo0Je9XxUSAEwAaHcAEz5T0m4udZaAiljEK24CU0VXfH/AdJukJyW9JunV3Gauy/wdlPRU1OG+EHYvXmrOYKsEcMAJD1wVQLTt3VyqnNFUH0q6MXoRp21PKiHvP7sEABMOOD4ToQFMXpbdXOrMABWmDxNojZPme1MJef/ZJMDu7d88pmDmANM3s3Ejqemow8v7km6Zkykfu1cCRMAJWAIgPr8YPv/W++YEHdpA5eZvAsFvOIQdp6CdWDucb3ymWTVTcy4wRhjhEfepNlzmaV6zg178JtaMkABaqgjN1AaqhyW97KCaBh2Jo8RZA79HmqlIMNnc3PwlrvJE3dnBWT7Tt8HEYeaqaG2gwk4/VAX3y2MSMHGUYudyAIn1qKoBqltDRp8xvl/Ss1XNon5mLcZ00VwBy5wiBFR8Kz6IiBL4zHpqnZPhBdFiJ3dnyBJAQxEWQCvNErDMKVdLdYnTXxxUOSX8f1o434CJgDOaCRNnGZfjjjwRdUB1pqSfo/HOkvTLROOvaRjARHwJy0Cr0l8asmBtmsoT9YZIbngfQHSNpOdCdi0xpupNXNf0DUBfhFun3DK9Yri8vGeHBCwksCsEK4uLfI+1egYqHHW+UX5Esz1J43Db5Usc8ScCoIo6RtneFPvfdvPXL6MhPfhCopkIDdBWfYnEQTUEMu19LFMA5xsnvLrI9+ZT737TQZUuWQBkt1H4zI2Uxe7k0sVz6sSb5te0+qVngUoLCWx0Jbx/mPp7OKi619Ci3gQn0Uo0Ll6OfiOlZmg5qNpXz0ro4C8BLNqsed81gcxA9bEkyu19EgJ1Nc0hJ6/NXRy0ud40e953zkmOTcvjVKc0UXywi8xJiLPsylXFmHIAzkD1dfAZECCHnGtobSYOMOEv8RSdXVnyAq0RVG0mjhgTJq66hLgSwbUW89e2izN/abLr4CUCYAyeDFQ/hIqzVHyh8stSWrPcoPlLRV5tWorQl6qpukwcDrj7SyMi2EBlV99rvvRgZ3FkVJItYFqJzIvJi1SMuGbFkzZQfSeJ3xf5XtIFxXP9XwbRShYSsP/gePMF4fGQwMQLWmtEHa1kJXNMKyE6P0KZGEBtw9UGKgCEVoovCqCV8JNWk1lZAG46WaghTmU7OMzcJZJODzNCK5mJK13Oq+LPQPWXpJ3hx2tOK0ACbUcnxhb341wrFbBIW7FQmvnDT7I7cTHPcXEKd7wLBhSsAaqLJX0V+PxI0g0T8xyXybGcJWPBz+ImXowcwwGq2yW9HYi9LmlfDsI9NOJbuvHuLQaTncV5oHKCBck5BKCiJPKhQHTM4hx9QIIFP9jNuboz0QJUcSFZzv6uzRgwtMAkvlLTtMVT9p3cTAAYY1hART0k0mat/RRKNp4XMkG/DMceRNzf6akIgym7KVxMtTtwW/FtzvciKp2MsTi10rQCHdRSvzRhEqQdE4b4M2g1tNB1UQypC0gEKu1JGNK71iKBuBgHdT+p/5m7cZWJQ13XSLklWyi9ZoWX6yXdH37T5NdwGSKVdZxtQMTjaSap0ltA/5MCwBWKmQUE5wAAAABJRU5ErkJggg==\",\r\n                \"name\": \"John Smith\"\r\n            },\r\n            \"date\": \"2020-08-27T08:45:36.477Z\",\r\n            \"listB\": {\r\n                \"documentOne\": {\r\n                    \"documentId\": \"94FEDDBA-0037-4AF5-BEF9-C18EB9E075C4\",\r\n                    \"isReceipt\": false,\r\n                    \"issuingAuthority\": \"Department of Defense\",\r\n                    \"documentNumber\": \"11111111\",\r\n                    \"expirationDate\": \"2020-08-28\",\r\n                    \"noExpirationDate\": false,\r\n                    \"receiptExpirationDate\": \"11/25/2020\",\r\n                    \"documentTitle\": \"U.S. Military Card\"\r\n                }\r\n            },\r\n            \"listC\": {\r\n                \"documentOne\": {\r\n                    \"documentId\": \"8CEF4DFF-7330-4C49-A54C-823235B39EE3\",\r\n                    \"isReceipt\": false,\r\n                    \"issuingAuthority\": \"Social Security Administration\",\r\n                    \"documentNumber\": \"111111111\",\r\n                    \"isDocumentSame\": true,\r\n                    \"receiptDocumentNumber\": null,\r\n                    \"receiptExpirationDate\": \"11/25/2020\",\r\n                    \"documentTitle\": \"Social Security Account Number Card Without Employment Restriction\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/section2",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"section2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_Section2_AlienRegistrationNumber",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"Section2_Complete\",\r\n    \"employeeFactId\": \"a294befa-2ce6-4562-8d61-d164c4f165f2\",\r\n    \"formData\": {\r\n        \"sectionTwo\": {\r\n            \"additionalInformation\": [],\r\n            \"employerRepresentative\": {\r\n                \"firstName\": \"John\",\r\n                \"lastName\": \"Smith\",\r\n                \"title\": \"\"\r\n            },\r\n            \"employee\": {\r\n                \"address\": \"114 Opolska\",\r\n                \"city\": \"Krakw\",\r\n                \"state\": \"VT\",\r\n                \"zipCode\": \"31406\",\r\n                \"dateOfBirth\": \"1991-11-09\",\r\n                \"socialSecurityNumber\": \"111111111\",\r\n                \"email\": \"test@test.com\",\r\n                \"lastName\": \"Appointment\",\r\n                \"firstName\": \"Derek\",\r\n                \"citizenshipImmigrationStatus\": \"ALIEN_AUTHORIZED_TO_WORK\",\r\n                \"middleInitial\": null\r\n            },\r\n            \"organization\": {\r\n                \"address\": \"polska 114\",\r\n                \"city\": \"krakow\",\r\n                \"name\": \"Phoenix\",\r\n                \"state\": \"AK\",\r\n                \"zipCode\": \"12345\"\r\n            },\r\n            \"hireDate\": \"2020-08-28\",\r\n            \"signature\": {\r\n                \"imageType\": \"image/png\",\r\n                \"method\": \"IMAGE\",\r\n                \"date\": \"2020-08-27T11:37:58.481Z\",\r\n                \"imageData\": \"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\",\r\n                \"name\": \"John Smith\"\r\n            },\r\n            \"date\": \"2020-08-27T11:38:01.510Z\",\r\n            \"listB\": {\r\n                \"documentOne\": {\r\n                    \"documentId\": \"85AF83AA-5D5F-44E6-9FDA-E01E9CBD5D44\",\r\n                    \"isReceipt\": false,\r\n                    \"issuingAuthority\": \"School ID Card with Photo\",\r\n                    \"documentNumber\": \"1111111\",\r\n                    \"expirationDate\": \"2020-08-28\",\r\n                    \"noExpirationDate\": false,\r\n                    \"receiptExpirationDate\": \"11/25/2020\",\r\n                    \"documentTitle\": \"School ID Card with Photo\"\r\n                }\r\n            },\r\n            \"listC\": {\r\n                \"documentOne\": {\r\n                    \"documentId\": \"40FDEE67-EAFD-47D7-A2F2-487C1BC986A1\",\r\n                    \"isReceipt\": false,\r\n                    \"issuingAuthority\": \"Office of Indian Affairs\",\r\n                    \"documentNumber\": \"1111111\",\r\n                    \"receiptExpirationDate\": \"11/25/2020\",\r\n                    \"documentTitle\": \"Native American Tribal Document\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/section2",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"section2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_FormData_AlienI94",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"isMinor\": false,\r\n\t\"ssnApplied\": false,\r\n\t\"ssnRefused\": false,\r\n  \"validListBDocs\": false,\r\n\t\"sectionOne\": {\r\n    \"signature\": {\r\n      \"name\": \"Derek Preparer\",\r\n      \"date\": \"2020-07-16T11:38:07.455Z\",\r\n      \"method\": \"IMAGE\",\r\n      \"imageData\": \"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\",\r\n        \"imageType\": \"image/png\"\r\n        },\r\n\t  \"date\": \"2020-07-16T11:38:07.455Z\",\r\n\t  \"employeeInfo\": {\r\n\t    \"firstName\": \"John\",\r\n\t    \"middleInitial\": \"L\",\r\n\t    \"lastName\": \"Sanderson\",\r\n\t    \"dateOfBirth\": \"1991-11-09\",\r\n\t    \"otherLastName\": \"James\",\r\n\t    \"socialSecurityNumber\": \"888888888\",\r\n\t    \"state\": \"MO\",\r\n\t    \"telephoneNumber\": \"4888888888\",\r\n\t    \"zipCode\": \"31223\",\r\n\t    \"address\": \"Opolska 114\",\r\n\t    \"apartmentNumber\": \"12345\",\r\n\t    \"city\": \"Krakow\",\r\n\t    \"email\": \"test@test.com\"\r\n\t  },\r\n    \"attestation\": {\r\n      \"isLawfulPermanentResident\": false,        \r\n      \"isNonCitizenNational\": false,        \r\n      \"isUnitedStatesCitizen\": false,        \r\n      \"lawfulPermanentResidentInfo\": null, \r\n      \"isAlienAuthorizedToWork\": true,\r\n      \"alienAuthorizedToWorkData\": {\r\n        \"expirationDate\": \"2049-11-20\",\r\n        \"alienRegistrationNumber\": \"\",\r\n        \"formI94AdmissionNumber\": \"12345678901\" \r\n      }\r\n    },\r\n\t  \"preparers\": [\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n        \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAFsAAABRCAYAAAC9rdr/AAAGn0lEQVR4Xu2dach1UxTHf2+SKfOQqQwZMpMpfDCUD+Q1fPCiEBIhsw98QqQkMkSSMUKGTBkSeZV5yBDKkCEiZI6iRP/H3sd69j3Tfe7Z95579151u899nnPXOfu311ln7bXX3s8i4sl7TvUDwEvA0/FONR2aF0W6zIuACwPdbwJ6fQPcA3wY6dy9VRsLthosy96mpuUC/xvwPHA38FFvKXV0YTFh6xLXA04G9gY2dq+6S78YeNJZ/c8dtbE3amLDDhu6KXCsg79PA4WHAb0eAWYC/LhhW76y9OMc+JWBnWvgvw3c7sB/3htTHfJCJgk7vNQDgcuBbRvaMLXg+wTbM14NONS9DmkAv9RZ/B1DGtlEDu8j7BCEB6/3VSsoyadfDQh6b93MNMC2fHd0fl7gNyoBL+jy7df0Efq0wQ4fsIJ+Vgn4X13sfrMbSE3EbYQnnWbYZRavcHKHoJHy61cArwPfT5L6rMC2DPcFjgS2AGws/wxwE3D/pIDPImzPcg3gjIoBlEaq1wI/jhP8LMO2HA8CTgIWm18qEXaji2LGwjwV2B6m3MqpwOGG7vvABcBjsYmnBttCvxTYywCWL9fv3o0FPVXYnufpznf7z78Dtzpf3znz1GF7oJrsOBNQqkDyJXAVoDyMQsdOJMP+H+PabnZJft1PesifK2pRyDiyZNiDCAX9viBG14TGJcDLoxDPsKvpycLDh6jic7mcBUmG3YwtnLzWSHT/5q8NHpFht6O2GXBZEJ+fB1zZ7uv/HZVhD0MLzgXOB9ZyX7vTzam20pJht8I0cNBz5gGqwZCm81SaUSsZdhOh8r8rYpEv19Dfi5Je19Wpy7AXBtt/KxyBLqlL4WbYo8HWtw92JRZeU2V4mGGPDlsaFJPLj3s53s2FztOeYXcDW1psPP4tsG6oOsPuDrY0vQjs6VQqn6I6x0K6hO1vI80Bpiw2LBSLImvYFWx7C42UP5iBXpI1a7pNItCF8XUBW1NMypJJFOAr/Eld/jEACuseFbbyvVsbxbu0GUkl0BMyPj/PWdzpo8B+C1A5mJd5t0wCQOuaeADwhDtABjlXmbtQ2I8GZQHSdfY4ywKmoDN/AFS7IpdyguLuhcAuW5yk9TBbTgGAcV7iq8Bu9lk2LGwb1vgL/wTYfJytmJJzHQ0oBetl8TCwb3PlumFb58WSUwJiXJepsggN3SVL28K24Z290Ay6vtu0TugNf0hb2KqLU1WoldQHL23vjiIMbAM7fCB+BZwzydLbtq3syXHFc64J9gpupa7WL3qpTZD3pIF9uoxiNNkEWxZsZ5Cz6xiuGzUr/3Fbn21Dva+BDYY7V/JHa7OEoqinzrJ3BV4zuI4B7koeX3sAA4M/C9svbf7CpQb3cIUpUq8YW0POLM0EtDmCUqyam7Qyb7jux/L+ANUqr+Q+3Asc1Xye5I9QAkqDGLuyQVDmknTWsl8Bdq/BJZ/9FLCmc/qPu+Vu6pTURRO+O7mQeMMAhnL8qqL6NPTZOlAPQS1t02LOJtHSZe2uoJ7TVhUqHvc92fTdPvw93Iajak8UpUlXAZYx+frtnKs4rKYhH9gNbqoekNa5C6DSp5ok0ENT1r9VAyl1glzQd26hp3bLUbrx7xZ7h/jqfzXci36npdL+fX3gD/fZH69j9bP9XHWZ0rW8e8XqdE34iqO2aZqTKth6WOqhKNFacJ9MsRcmq1AZlqr09VDYD1BcmbpoJbEmDgbquKtgX2/q2Bpr2Axd5bQF/k9ALkkdoS2L5GI0Zeb9mbdaWWHZTguKiCSywHAXHX22lu0t2r9X7dygv//izqf35Tq2bLlSWbM2GyuVNm5Ee35oZmYWpa3PllvUXatO8nev3NizrtMebAOnCrYdOcqKCr/TRmk+pr1lr+52H5M/Vo9ukuF1Q6DMslcEfOyskdAp3ZwqaymDbcO+PHLs0EbKYD/kNsPKLqRD0FJVBtsnuzWY0RA0S0cEQth2MHMLcGJH58lqSizbhnwakGhsn6UjAtaytwfecXpz3V5HgK0aCzvXWEcAXAXbV6VqOzblOH6KfO7k1FvL/gtY1qVE10mOxBga7GFbF6JVqsr0ZemYgIf9mdm1vamWpONLSEedwIYLJjPsSP0fwq6alYl0+rTUCraSTUe4Zuv/ydi97tKiEbm1gv2CAax/d6JZ4ywRCAi2XVGQ3UgEyF6lYKvcQLMykoH11hHPnZxqwbZhX4Yd0QQE2y79zQmoyLCtZWefHRm2/YdrNwCnRTxf0qrlRjLsMZnAv+m5EwQv72VyAAAAAElFTkSuQmCC\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    },\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n          \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"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\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    }\r\n\t  ]\r\n\t},\r\n\t\"sectionTwo\": {\r\n      \"hireDate\": \"2020-04-23\",\r\n      \"additionalInformation\": [],\r\n      \"employerRepresentative\": {\r\n        \"firstName\": \"John\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"title\": \"\"\r\n      },\r\n      \"employee\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\",\r\n        \"dateOfBirth\": \"2001-11-20\",\r\n        \"email\": \"test@test.com\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"firstName\": \"John\",\r\n        \"title\": \"\",\r\n        \"citizenshipImmigrationStatus\": \"ALIEN_AUTHORIZED_TO_WORK\",\r\n        \"middleInitial\": \"L\"\r\n      },\r\n      \"organization\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\"\r\n      },\r\n      \"signature\": {\r\n        \"method\": \"IMAGE\",\r\n        \"name\": \"James Smith\",\r\n        \"date\": \"2020-04-23T14:00:57.635Z\",\r\n        \"imageType\": \"image/png\",\r\n        \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAABZUlEQVRIS72VvUpEMRCFv7UXbNVGRHwFW23sLHdbBQtB8Xex1i12QRAFEUFRbBRBH8JtLAUraws79R3kaAZCyN297k0cCJeb4nwzkzlJjd/Yd8v95v/UgEdgFngADoDn/FjwweJ9AGf/Ub3Aiktg2au0C6wBr7mqN7D074F6ALoAVnLAffAU0InA34EdNwPJcvDBEp0ErtywhRC1Xx24S0EPwdKcAHaB1QLAOnBaFR4Dm6a8vVcAeAI2q1ivF1jMEeAImAfGI0kMPHz9wMYaBtqA2hzGpzsWXUCloyzYBHX+1z2Gb64s+a9g05XfbfmsL2ALuOmXwKBg6Y4CC8B5ACl17VYB+zx5uwEMeZs6khPgJVZ9KrC0i9rfij06KcHWfl27S0GVx676N9tPDTZdve+3wJiXgOym4/iJXGBpzwDNyKMjy3VzggWX7zeAba9yTX0jN9h4uvcXXSLZWx26aBo4dN7nG70hNFW0Ux2HAAAAAElFTkSuQmCC\"\r\n      },\r\n      \"listB\": {\r\n          \"documentOne\": {\r\n            \"documentId\": \"94FEDDBA-0037-4AF5-BEF9-C18EB9E075C4\",\r\n            \"isReceipt\": false,\r\n            \"issuingAuthority\": \"Department of Defense\",\r\n            \"documentNumber\": \"11111111\",\r\n            \"expirationDate\": \"2020-08-28\",\r\n            \"noExpirationDate\": false,\r\n            \"receiptExpirationDate\": \"11/25/2020\",\r\n            \"documentTitle\": \"U.S. Military Card\"\r\n          }\r\n        },\r\n       \"listC\": {\r\n           \"documentOne\": {\r\n               \"documentId\": \"8CEF4DFF-7330-4C49-A54C-823235B39EE3\",\r\n               \"isReceipt\": false,\r\n               \"issuingAuthority\": \"Social Security Administration\",\r\n               \"documentNumber\": \"111111111\",\r\n               \"isDocumentSame\": true,\r\n               \"receiptDocumentNumber\": null,\r\n               \"receiptExpirationDate\": \"11/25/2020\",\r\n               \"documentTitle\": \"Social Security Account Number Card Without Employment Restriction\"\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/formdata",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"formdata"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT_FormData_AlienRegistrationNumber",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"isMinor\": false,\r\n\t\"ssnApplied\": false,\r\n\t\"ssnRefused\": false,\r\n  \"validListBDocs\": false,\r\n\t\"sectionOne\": {\r\n    \"signature\": {\r\n      \"name\": \"Derek Preparer\",\r\n      \"date\": \"2020-07-16T11:38:07.455Z\",\r\n      \"method\": \"IMAGE\",\r\n      \"imageData\": \"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\",\r\n        \"imageType\": \"image/png\"\r\n        },\r\n\t  \"date\": \"2020-07-16T11:38:07.455Z\",\r\n\t  \"employeeInfo\": {\r\n\t    \"firstName\": \"John\",\r\n\t    \"middleInitial\": \"L\",\r\n\t    \"lastName\": \"Sanderson\",\r\n\t    \"dateOfBirth\": \"1991-11-09\",\r\n\t    \"otherLastName\": \"James\",\r\n\t    \"socialSecurityNumber\": \"888888888\",\r\n\t    \"state\": \"MO\",\r\n\t    \"telephoneNumber\": \"4888888888\",\r\n\t    \"zipCode\": \"31223\",\r\n\t    \"address\": \"Opolska 114\",\r\n\t    \"apartmentNumber\": \"12345\",\r\n\t    \"city\": \"Krakow\",\r\n\t    \"email\": \"test@test.com\"\r\n\t  },\r\n    \"attestation\": {\r\n      \"isLawfulPermanentResident\": false,        \r\n      \"isNonCitizenNational\": false,        \r\n      \"isUnitedStatesCitizen\": false,        \r\n      \"lawfulPermanentResidentInfo\": null, \r\n      \"isAlienAuthorizedToWork\": true,\r\n      \"alienAuthorizedToWorkData\": {\r\n        \"expirationDate\": \"2049-11-20\",\r\n        \"alienRegistrationNumber\": \"1234567\"\r\n      }\r\n    },\r\n\t  \"preparers\": [\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n        \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"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\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    },\r\n\t    {\r\n\t      \"firstName\": \"Derek\",\r\n\t      \"lastName\": \"Sanders\",\r\n\t      \"address\": \"Opolska 114\",\r\n\t      \"state\": \"MO\",\r\n\t      \"city\": \"Krakow\",\r\n\t      \"zipCode\": \"31223\",\r\n          \"signature\": {\r\n          \"name\": \"Derek Preparer\",\r\n          \"date\": \"2020-07-16T11:38:07.455Z\",\r\n          \"method\": \"IMAGE\",\r\n          \"imageData\": \"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\",\r\n           \"imageType\": \"image/png\"\r\n         }\r\n\t    }\r\n\t  ]\r\n\t},\r\n\t\"sectionTwo\": {\r\n      \"hireDate\": \"2020-04-23\",\r\n      \"additionalInformation\": [],\r\n      \"employerRepresentative\": {\r\n        \"firstName\": \"John\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"title\": \"\"\r\n      },\r\n      \"employee\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\",\r\n        \"dateOfBirth\": \"2001-11-20\",\r\n        \"email\": \"test@test.com\",\r\n        \"lastName\": \"Sanderson\",\r\n        \"firstName\": \"John\",\r\n        \"title\": \"\",\r\n        \"citizenshipImmigrationStatus\": \"ALIEN_AUTHORIZED_TO_WORK\",\r\n        \"middleInitial\": \"L\"\r\n      },\r\n      \"organization\": {\r\n        \"address\": \"Krakow Opolska 114\",\r\n        \"city\": \"Krakow\",\r\n        \"state\": \"CA\",\r\n        \"zipCode\": \"12345\"\r\n      },\r\n      \"signature\": {\r\n        \"method\": \"IMAGE\",\r\n        \"name\": \"James Smith\",\r\n        \"date\": \"2020-04-23T14:00:57.635Z\",\r\n        \"imageType\": \"image/png\",\r\n        \"imageData\": \"iVBORw0KGgoAAAANSUhEUgAAAB4AAAAWCAYAAADXYyzPAAABZUlEQVRIS72VvUpEMRCFv7UXbNVGRHwFW23sLHdbBQtB8Xex1i12QRAFEUFRbBRBH8JtLAUraws79R3kaAZCyN297k0cCJeb4nwzkzlJjd/Yd8v95v/UgEdgFngADoDn/FjwweJ9AGf/Ub3Aiktg2au0C6wBr7mqN7D074F6ALoAVnLAffAU0InA34EdNwPJcvDBEp0ErtywhRC1Xx24S0EPwdKcAHaB1QLAOnBaFR4Dm6a8vVcAeAI2q1ivF1jMEeAImAfGI0kMPHz9wMYaBtqA2hzGpzsWXUCloyzYBHX+1z2Gb64s+a9g05XfbfmsL2ALuOmXwKBg6Y4CC8B5ACl17VYB+zx5uwEMeZs6khPgJVZ9KrC0i9rfij06KcHWfl27S0GVx676N9tPDTZdve+3wJiXgOym4/iJXGBpzwDNyKMjy3VzggWX7zeAba9yTX0jN9h4uvcXXSLZWx26aBo4dN7nG70hNFW0Ux2HAAAAAElFTkSuQmCC\"\r\n      },\r\n         \"listB\": {\r\n                \"documentOne\": {\r\n                    \"documentId\": \"85AF83AA-5D5F-44E6-9FDA-E01E9CBD5D44\",\r\n                    \"isReceipt\": false,\r\n                    \"issuingAuthority\": \"School ID Card with Photo\",\r\n                    \"documentNumber\": \"1111111\",\r\n                    \"expirationDate\": \"2020-08-28\",\r\n                    \"noExpirationDate\": false,\r\n                    \"receiptExpirationDate\": \"11/25/2020\",\r\n                    \"documentTitle\": \"School ID Card with Photo\"\r\n                }\r\n            },\r\n            \"listC\": {\r\n                \"documentOne\": {\r\n                    \"documentId\": \"40FDEE67-EAFD-47D7-A2F2-487C1BC986A1\",\r\n                    \"isReceipt\": false,\r\n                    \"issuingAuthority\": \"Office of Indian Affairs\",\r\n                    \"documentNumber\": \"1111111\",\r\n                    \"receiptExpirationDate\": \"11/25/2020\",\r\n                    \"documentTitle\": \"Native American Tribal Document\"\r\n                }\r\n            }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.gcp.efx/internal/eev/form-i9/v1/forms/{{documentId}}/formdata",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{documentId}}",
+						"formdata"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET_Section1_Pending",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api.ews.npe.gcp.efx/business/eev/form-i9/v1/packets/ef297df9-9cad-4be0-90c5-9777f031bb50/forms/section1/pending",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api",
+						"ews",
+						"npe",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"packets",
+						"ef297df9-9cad-4be0-90c5-9777f031bb50",
+						"forms",
+						"section1",
+						"pending"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Section 2 Upload Documents (Later)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"listA\": {\r\n        \"documentOne\": {\r\n            \"frontImageType\": \"image/jpg\",\r\n            \"frontImageData\": \"/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wgARCAAxAEEDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEC/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB0QoAAAJNDNUzaJNACAAAoAAAAAAP/8QAFBABAAAAAAAAAAAAAAAAAAAAUP/aAAgBAQABBQJ//8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAwEBPwEn/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAgEBPwEn/8QAFBABAAAAAAAAAAAAAAAAAAAAUP/aAAgBAQAGPwJ//8QAFhABAQEAAAAAAAAAAAAAAAAAQBHR/9oACAEBAAE/IT4Km//aAAwDAQACAAMAAAAQEAAAAwIAQAsMMAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAwEBPxAn/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAgEBPxAn/8QAJRAAAgEDAwQCAwAAAAAAAAAAAREhADFBYXGhIDBRgdHwkbHB/9oACAEBAAE/EO0x2Dupjenb3ax1pwSzbznzFWcmz++KwZssvmiU50TvQvcwB/aDiRrLP4UdC1JxPWbexbep1TCcH7vTJDjPHqgTDyPimYi74NXe1n4XPRek/wB0t9sUtTH1UgFo+aWp2x3f/9k=\",\r\n            \"backImageType\": \"image/jpg\",\r\n            \"backImageData\": \"/9j/4AAQSkZJRgABAQEAeAB4AAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wgARCAAxAEEDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEC/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAB0QoAAAJNDNUzaJNACAAAoAAAAAAP/8QAFBABAAAAAAAAAAAAAAAAAAAAUP/aAAgBAQABBQJ//8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAwEBPwEn/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAgEBPwEn/8QAFBABAAAAAAAAAAAAAAAAAAAAUP/aAAgBAQAGPwJ//8QAFhABAQEAAAAAAAAAAAAAAAAAQBHR/9oACAEBAAE/IT4Km//aAAwDAQACAAMAAAAQEAAAAwIAQAsMMAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAwEBPxAn/8QAFBEBAAAAAAAAAAAAAAAAAAAAQP/aAAgBAgEBPxAn/8QAJRAAAgEDAwQCAwAAAAAAAAAAAREhADFBYXGhIDBRgdHwkbHB/9oACAEBAAE/EO0x2Dupjenb3ax1pwSzbznzFWcmz++KwZssvmiU50TvQvcwB/aDiRrLP4UdC1JxPWbexbep1TCcH7vTJDjPHqgTDyPimYi74NXe1n4XPRek/wB0t9sUtTH1UgFo+aWp2x3f/9k=\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/business/eev/form-i9/v1/forms/{{FORM_ID}}/section2/upload",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"form-i9",
+						"v1",
+						"forms",
+						"{{FORM_ID}}",
+						"section2",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DecryptData",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"encryptedData\": \"CzxRNGrZALCB9ze5e0sG5opHacnqesj0kuFY91/DFUlMO4TOjQ==\",\r\n    \"hmacValue\": \"fOPYE/ss3N51cPT2UENU/u5wyOHw0wHt6a6AlmHGDDRGhsldt1Ou5jOrlenlzcPZNbEhOKakXSHCbxVn4E9now==\",\r\n    \"keyStoreId\": \"zzMOAqYTYQuRkqKqZUDA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/barricadeTest/decrypt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"barricadeTest",
+						"decrypt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CANCEL PACKET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.set(\"packetId\", \"\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var packetId = pm.collectionVariables.get(\"packetId\");\r",
+							"\r",
+							"if(packetId == null || packetId == undefined || packetId == \"\") {\r",
+							"    throw new Error(\"No packetId found to cancel it\");\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://api.dev.equifax.com/business/es-platform/packet/v1/packets/{{packetId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"es-platform",
+						"packet",
+						"v1",
+						"packets",
+						"{{packetId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "NEW_PACKET_STEP1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var rndSSN = (Math.floor(Math.random() * 1000) + \"\" + Math.floor(Math.random() * 100) + \"\" + Math.floor(Math.random() * 10000) + Math.floor(Math.random() * 1000)).substr(0, 9);\r",
+							"pm.collectionVariables.set(\"employee_ssn\", rndSSN);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"form_id\": \"f9d18b8a-8e12-40d5-819a-3e736dcb01b3\",\r\n\t\"metadata\": [\r\n\t\t{\r\n\t\t\t\"key\": \"PI_SSN\",\r\n\t\t\t\"value\": \"{{employee_ssn}}\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key\": \"PI_APPLIED_FOR_SSN\",\r\n\t\t\t\"value\": null\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key\": \"PI_DOB\",\r\n\t\t\t\"value\": \"1990-01-03\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key\": \"PI_ZIP_CODE\",\r\n\t\t\t\"value\": \"30319\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key\": \"PI_STREET_ADDRESS1\",\r\n\t\t\t\"value\": \"1277 Lenox Park Boulevard Northeast\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key\": \"PI_STREET_ADDRESS2\",\r\n\t\t\t\"value\": null\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key\": \"PI_CITY\",\r\n\t\t\t\"value\": \"Atlanta\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"key\": \"PI_STATE\",\r\n\t\t\t\"value\": \"GA\"\r\n\t\t}\r\n\t]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dev.equifax.com/business/es-platform/packet/v1/packets/{{packetId}}/steps",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"es-platform",
+						"packet",
+						"v1",
+						"packets",
+						"{{packetId}}",
+						"steps"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{BEARER_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"function getRandomFirstName() {",
+					"    const fname = pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+					"    return fname;",
+					"}",
+					"",
+					"function getRandomLastName() {",
+					"    const lname = pm.variables.replaceIn(\"{{$randomLastName}}\");",
+					"    return lname;",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "employerId",
+			"value": "78bc1cfe-67e2-4de9-8b79-ad70c07f4b84"
+		},
+		{
+			"key": "employerLocationId",
+			"value": "7344fc1e-e67c-49c4-a6bf-ea2da089a609"
+		},
+		{
+			"key": "employeeFactId",
+			"value": "a7935b1b-3b26-4f14-ae3c-b57dbce8dc22"
+		},
+		{
+			"key": "employee_first_name",
+			"value": "Jude"
+		},
+		{
+			"key": "employee_last_name",
+			"value": "Wehner"
+		},
+		{
+			"key": "packetId",
+			"value": "9b53ddec-abcc-4393-b985-038db1637492"
+		},
+		{
+			"key": "employeeId",
+			"value": ""
+		},
+		{
+			"key": "employee_ssn",
+			"value": "128842885"
+		},
+		{
+			"key": "i9DocumentId",
+			"value": "cT8QCIT0mc7bEinS9dXk"
+		},
+		{
+			"key": "employee_address",
+			"value": "1277 Lenox Park Blvd"
+		},
+		{
+			"key": "employee_city",
+			"value": "Atlanta"
+		},
+		{
+			"key": "employee_state",
+			"value": "GA"
+		},
+		{
+			"key": "employee_zipcode",
+			"value": "30005"
+		},
+		{
+			"key": "employee_dob",
+			"value": "1990-11-09"
+		},
+		{
+			"key": "org_address",
+			"value": "123 Main Street"
+		},
+		{
+			"key": "user",
+			"value": "kunal.patil+hradmin@equifax.com"
+		},
+		{
+			"key": "password",
+			"value": "Equifax@2021"
+		}
+	]
+}

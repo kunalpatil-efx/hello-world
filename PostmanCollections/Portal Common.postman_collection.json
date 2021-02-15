@@ -1,0 +1,30 @@
+{
+	"info": {
+		"_postman_id": "ab692c40-9a01-46f7-b104-fd82ad5824a0",
+		"name": "Portal Common",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Feature Toggle",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/internal/es-platform/portal-common/v1/feature-toggle",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"es-platform",
+						"portal-common",
+						"v1",
+						"feature-toggle"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

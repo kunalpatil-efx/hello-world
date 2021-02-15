@@ -1,0 +1,472 @@
+{
+	"info": {
+		"_postman_id": "b8725c00-b223-4774-a1a4-c5f5f0c8e4b7",
+		"name": "Everify API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create_case",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"case_number\", jsonData.case_data.case_number);\r",
+							"postman.setEnvironmentVariable(\"caseId\", jsonData.case_id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{body_to_create_case}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/internal/eev/everify/v1/cases",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"everify",
+						"v1",
+						"cases"
+					]
+				},
+				"description": "creates a case"
+			},
+			"response": []
+		},
+		{
+			"name": "photo_match",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"matchResponse\": \"not-matching\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{public-base-url}}/business/eev/everify/v1/cases/{{caseId}}/photo-match",
+					"host": [
+						"{{public-base-url}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"cases",
+						"{{caseId}}",
+						"photo-match"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "scan_and_upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "front-photo",
+							"type": "file",
+							"src": "/C:/Users/sxf151/Desktop/front_photo.jpg"
+						},
+						{
+							"key": "back-photo",
+							"type": "file",
+							"src": "/C:/Users/sxf151/Desktop/back_photo.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base-url}}/business/eev/everify/v1/cases/{{caseId}}/scan-and-upload",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"cases",
+						"{{caseId}}",
+						"scan-and-upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "business_refer_case",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{public-base-url}}/business/eev/everify/v1/cases/{{caseId}}/referral",
+					"host": [
+						"{{public-base-url}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"cases",
+						"{{caseId}}",
+						"referral"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "business_get_referal_case",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{public-base-url}}/business/eev/everify/v1/cases/{{caseId}}/referral",
+					"host": [
+						"{{public-base-url}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"cases",
+						"{{caseId}}",
+						"referral"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "raw_data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"employer_id\": \"\",\r\n  \"employer_location_code\": \"\",\r\n  \"source_system_name\": \"\",\r\n  \"source_system_reference_id\": \"\",\r\n  \"employee_id\": \"\",\r\n  \"case_data\": {\r\n    \"client_software_version\": \"30\",\r\n    \"duplicate_continue_reason\": \"Required field\",\r\n    \"first_name\": \"FirstName\",\r\n    \"middle_initial\": null,\r\n    \"last_name\": \"LastName\",\r\n    \"other_last_names_used\": null,\r\n    \"date_of_birth\": \"1977-06-09\",\r\n    \"employee_email_address\": null,\r\n    \"phone_number\": null,\r\n    \"ssn\": \"132-21-3213\",\r\n    \"alien_number\": null,\r\n    \"citizenship_status_code\": \"US_CITIZEN\",\r\n    \"document_a_type_code\": \"US_PASSPORT\",\r\n    \"document_b_type_code\": null,\r\n    \"document_c_type_code\": null,\r\n    \"document_sub_type_code\": null,\r\n    \"i94_number\": null,\r\n    \"i551_number\": null,\r\n    \"i766_number\": null,\r\n    \"us_passport_number\": 123456789,\r\n    \"foreign_passport_number\": null,\r\n    \"document_bc_number\": null,\r\n    \"expiration_date\": \"2028-04-06\",\r\n    \"country_code\": null,\r\n    \"us_state_code\": null,\r\n    \"no_expiration_date\": false,\r\n    \"visa_number\": null,\r\n    \"employer_case_id\": null,\r\n    \"date_of_hire\": \"2019-01-01\",\r\n    \"reason_for_delay_code\": \"TECHNICAL_PROBLEMS\",\r\n    \"reason_for_delay_description\": null,\r\n    \"sevis_number\": null,\r\n    \"case_creator_name\": \"John Doe\",\r\n    \"case_creator_email_address\": \"email@email.com\",\r\n    \"case_creator_phone_number\": \"1231231234\",\r\n    \"case_creator_phone_number_extension\": null,\r\n    \"client_company_id\":11456\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/internal/eev/everify/v1/rawData/cases/",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"everify",
+						"v1",
+						"rawData",
+						"cases",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "business_get_case",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{public-base-url}}/business/eev/everify/v1/cases/{{caseId}}",
+					"host": [
+						"{{public-base-url}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"cases",
+						"{{caseId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base-url}}/business/eev/everify/v1/cases/{{caseId}}/referral",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base-url}}/business/eev/everify/v1/cases/{{caseId}}/referral",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"cases",
+						"{{caseId}}",
+						"referral"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{base-url}}/business/eev/everify/v2/referrals/{{caseId}}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base-url}}/business/eev/everify/v2/referrals/{{caseId}}",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v2",
+						"referrals",
+						"{{caseId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "packet patch",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlbXBsb3llZXMiLCJwcm9vZmVkIjp0cnVlLCJpc3MiOiJwYWNrZXQtYXBpIiwiZXhwIjoxNjAzMjM5Mzc1LCJwYWNrZXQiOiIwM2Y3ZTc0Zi1mZWUyLTRmOGItYWQ4Yi1kOWM3NGY1ZjVmMzgiLCJpYXQiOjE2MDMxNTI5NzV9.G5nmn_BZtG1Q34H0p70gJRet6dYcct_EF0H60ZYmFxo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"fanEmployeeResponse\": \"NO_ACTION\",\r\n     \"fanEmployeeSubmissionDate\": \"2020-10-10\",\r\n      \"fanEmployeeSignature\": {\r\n    \"method\": \"IMAGE\",\r\n    \"date\": \"2019-12-31T15:30:45Z\",\r\n    \"name\": \"John Q Doe\",\r\n    \"imageType\": \"image/png\",\r\n    \"imageData\": \"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AEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABAiwAAAAEIEGAAAQIgAAwAACBFgAAAAIQIMAAAgRIABAACECDAAAIAQAQYAABDx33//B2NrNazykmJ+AAAAAElFTkSuQmCC\"\r\n   }\r\n  \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{public-base-url}}/business/eev/everify/v1/packets/03f7e74f-fee2-4f8b-ad8b-d9c74f5f5f38/referrals/8viTt5RU76bq2I1CYLN9",
+					"host": [
+						"{{public-base-url}}"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"packets",
+						"03f7e74f-fee2-4f8b-ad8b-d9c74f5f5f38",
+						"referrals",
+						"8viTt5RU76bq2I1CYLN9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Manual_Review_Case",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"case_number\", jsonData.case_data.case_number);\r",
+							"postman.setEnvironmentVariable(\"caseId\", jsonData.case_id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "QDCHfmsxUyrZ7Vq1SjCzGkzjUI7Ps2FqBp0HMl2Ck0u9Ja/4PhztqnBpm+JqA1T2DnLNe9qhdox6xC23qAOmQKf8AoMDptJxfTbak7WW2Sl013DrLT7r+K+Qe0dZjEbhkGXfOeHWdRqbcni92RFzwdtcOGkCYXenrENgvN5RszVF6/LSXVp1zoo6nsikwSacvo0NJ4/l4Ims/fTQZU+dI5vU+Ar7DD9rMxta67+r",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"employer_id\": \"acd204af-b573-4439-b408-b314fc9cf8da\",\r\n\t\"employee_id\": \"bf6c66ce-dc49-4a63-8b3b-2fe6c7b319f5\",\r\n\t\"employee_fact_id\": \"bf6c66ce-dc49-4a63-8b3b-2fe6c7b319f5\",\r\n\t\"employer_location_id\": \"dfe15324-47ee-45e4-9880-f77569b51686\",\r\n\t\"source_system_name\": \"Packet UI\",\r\n\t\"source_system_id\": \"packet-ui\",\r\n\t\"source_system_reference_id\": \"f8a53880-31f9-4729-9db6-e276f8f127fe\",\r\n\t\"case_data\": {\r\n\t\t\"client_software_version\": \"30\",\r\n\t\t\"duplicate_continue_reason\": \"Required Field\",\r\n\t\t\"first_name\": \"Tim\",\r\n\t\t\"middle_initial\": null,\r\n\t\t\"last_name\": \"Salek\",\r\n\t\t\"other_last_names_used\": null,\r\n\t\t\"date_of_birth\": \"1979-12-12\",\r\n\t\t\"employee_email_address\": null,\r\n\t\t\"phone_number\": null,\r\n\t\t\"ssn\": \"789-78-9788\",\r\n\t\t\"alien_number\": \"A746546546\",\r\n\t\t\"citizenship_status_code\": \"LAWFUL_PERMANENT_RESIDENT\",\r\n\t\t\"document_a_type_code\": \"FOREIGN_PASSPORT_WITH_I551_STAMP\",\r\n\t\t\"document_b_type_code\": null,\r\n\t\t\"document_c_type_code\": null,\r\n\t\t\"document_sub_type_code\": null,\r\n\t\t\"i94_number\": null,\r\n\t\t\"i551_number\": null,\r\n\t\t\"i766_number\": null,\r\n\t\t\"us_passport_number\": null,\r\n\t\t\"foreign_passport_number\": \"HK220111\",\r\n\t\t\"document_bc_number\": null,\r\n\t\t\"expiration_date\": \"2027-05-11\",\r\n\t\t\"country_code\": \"CAN\",\r\n\t\t\"us_state_code\": null,\r\n\t\t\"no_expiration_date\": false,\r\n\t\t\"visa_number\": null,\r\n\t\t\"employer_case_id\": null,\r\n\t\t\"date_of_hire\": \"2019-01-01\",\r\n\t\t\"reason_for_delay_code\": \"TECHNICAL_PROBLEMS\",\r\n\t\t\"reason_for_delay_description\": null,\r\n\t\t\"sevis_number\": null,\r\n\t\t\"case_creator_name\": \"John Doe\",\r\n\t\t\"case_creator_email_address\": \"email@email.com\",\r\n\t\t\"case_creator_phone_number\": \"1231231234\",\r\n\t\t\"case_creator_phone_number_extension\": null,\r\n\t\t\"client_company_id\": 11456\r\n\t},\r\n\t\"i9Info\": {\r\n\t\t\"id\": \"6PT0pDonwrE3yRgZugUG\",\r\n\t\t\"modelVersion\": \"1.0\",\r\n\t\t\"recordVersion\": 3,\r\n\t\t\"createdDateUTC\": \"2020-07-12T05:59:59.999Z\",\r\n\t\t\"fieldsMapping\": [\r\n\t\t\t{\r\n\t\t\t\t\"everifyFieldName\": \"i94_number\",\r\n\t\t\t\t\"i9SectionNumber\": 2,\r\n\t\t\t\t\"i9FieldLocation\": \"formData.sectionTwo.listA.documentOne.documentNumber\"\r\n\t\t\t}\r\n\t\t]\r\n\t}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.qa.equifax.com/business/eev/everify/v1/cases",
+					"protocol": "https",
+					"host": [
+						"api",
+						"qa",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"cases"
+					]
+				},
+				"description": "creates a case"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Unconfirmed data",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "mlaIusrTC+s5dQkDI9cIiNAtY7rEy311gjpxZwsfbLf2nSsoTBZ/v0kz6GIB2M8ekCjUN32UjNLf7JZ/CI/p3tSy41nokC/8aYeYEcG5mmo291pZkclRFhY8Du8f0yNRAFddLJWXkc686RTo8qELVuEAL7yFyFdP8CBH86Di4T3ZwyRWOlWXN/xV6sBcl/VdlgF5CTnn0M4OSWIum9Omt2IGx2xa2ISlvOiLCD6e",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.qa.equifax.com/business/eev/everify/v1/cases/1GliQz81vlrj0suH2mQg/unconfirmed-data?i9Section=1",
+					"protocol": "https",
+					"host": [
+						"api",
+						"qa",
+						"equifax",
+						"com"
+					],
+					"path": [
+						"business",
+						"eev",
+						"everify",
+						"v1",
+						"cases",
+						"1GliQz81vlrj0suH2mQg",
+						"unconfirmed-data"
+					],
+					"query": [
+						{
+							"key": "i9Section",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

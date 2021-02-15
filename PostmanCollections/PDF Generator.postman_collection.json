@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "1aed2698-f801-45a0-8769-ff5b2aea1f74",
+		"name": "PDF Generator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generator PDF",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-version",
+						"value": "0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"filename\": \"I9Report.pdf\",\r\n\t\"language\": \"en\",\r\n\t\"sectionOne\": {\r\n\t\t\"metadata\": {\r\n\t\t\t\"validListBDocs\": true,\r\n\t\t\t\"specialPlacement\": false,\r\n\t\t\t\"everify\": \"false\"\r\n\t\t},\r\n\t\t\"employeeInfo\": {\r\n\t\t\t\"lastName\": \"Smith\",\r\n\t\t\t\"firstName\": \"Clark\",\r\n\t\t\t\"middleInitial\": null,\r\n\t\t\t\"otherLastName\": null,\r\n\t\t\t\"address\": \"1277 Lenox Oval\",\r\n\t\t\t\"apartmentNumber\": null,\r\n\t\t\t\"city\": \"Pittsburgh\",\r\n\t\t\t\"state\": \"PA\",\r\n\t\t\t\"zipCode\": \"15237\",\r\n\t\t\t\"dateOfBirth\": \"12/12/1990\",\r\n\t\t\t\"socialSecurityNumber\": \"876543212\",\r\n\t\t\t\"telephoneNumber\": \"123456789\",\r\n\t\t\t\"email\": null\r\n\t\t},\r\n\t\t\"attestation\": {\r\n\t\t\t\"isAlienAuthorizedToWork\": null,\r\n\t\t\t\"isLawfulPermanentResident\": null,\r\n\t\t\t\"isNonCitizenNational\": null,\r\n\t\t\t\"isUnitedStatesCitizen\": true,\r\n\t\t\t\"lawfulPermanentResidentInfo\": null,\r\n\t\t\t\"alienAuthorizedToWorkData\": null\r\n\t\t},\r\n\t\t\"preparers\": [],\r\n\t\t\"signature\": \"iVBORw0KGgoAAAANSUhEUgAAADMAAAAfCAIAAADFrWIwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAG3SURBVFhH7ZdRsoMgDEXbtyzcD27HbsYuRvfiuzdEISBW+vrReeP56QghOQZwpvdlWW5fyY/+fh+XWTv/02yen49H33ddd4/gqX/Os4a0gXxd91jX4m4WTOMweOdk3vlRRwOY8xgNk3XcMOmCk0yj14K6Us1Yzw/0kdmUWGNbfI7slY6YhpjYmI3ogsX5YZwmrPAhLpFya78cghiFACTYPDCgwWfVUIX1RtHbGkGzRAzVaBTACj5pHc5gEE9pDOEb5xbM2dA0ECziGprJUF6O9Yja6uAO9CpPVatZ2M80j+ymVSJolNhit3Skwr5Xq1jwson0BiRw1xF12KcVyVgayGu1i9kVmZnGnEnL64xguQbJW+ixTBMg0n5lsiaHE5bXrJgdb2S8qDEbbsr2DTT93lISHNxiM4JYcSSsmclCvT27LMhyfFv2qIgZM4lBSPLxYqnyfBdubAW/bTrfQk0smoVqye5YPVOVsTu53qEqtpqFgOLcp3qw01EGF6FvUikMxEx6UD0gUU8S5M39I5L9oGcvkQTUEbGPeR1w1mwD7f/QEXvB9d+pncusncusncusnW81u91+AZfrV4MOIU37AAAAAElFTkSuQmCC\",\r\n\t\t\"signatureDate\": \"01/04/2021\",\r\n\t\t\"signatureText\": null,\r\n\t\t\"version\": \"2\"\r\n\t},\r\n\t\"sectionTwoAndThree\": null,\r\n\t\"amendments\": null,\r\n\t\"sectionThree\": null,\r\n\t\"auditTrail\": null,\r\n\t\"formRevDate\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/internal/eev/pdfgenerator/generate",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"pdfgenerator",
+						"generate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/internal/eev/pdfgenerator/info",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"pdfgenerator",
+						"info"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

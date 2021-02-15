@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "57cde179-73bc-43ce-a7c1-5095ec5b7cfa",
+		"name": "Queue Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Queue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202, 200]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"queueId\": \"KP_Test_Queue\",\r\n    \"callbackUrl\": \"/case-management/create/{caseId}\",\r\n    \"httpMethod\": \"PATCH\",\r\n    \"maxThreads\": 5,\r\n    \"maxRetries\": 3,\r\n    \"workerTimeout\": 0,\r\n    \"workerStandbyTime\": 0,\r\n    \"maxItemRetention\": 0,\r\n    \"retryInterval\": 30,\r\n    \"enabled\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{QMS_HOST}}/{{QMS_BASE_PATH}}",
+					"host": [
+						"{{QMS_HOST}}"
+					],
+					"path": [
+						"{{QMS_BASE_PATH}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://dev-workforce-api-internal.ews.npe.west.gcp.efx/internal/eev/queue-management/v1/queues/QUEUEINFO_DEV_REFERCASE/items",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"content\": \"kp-1231\",\r\n\t\"status\": \"READY\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.east.gcp.efx/internal/eev/queue-management/v1/queues/QUEUEINFO_DEV_REFERCASE/items",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"east",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"queue-management",
+						"v1",
+						"queues",
+						"QUEUEINFO_DEV_REFERCASE",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://dev-workforce-api-internal.ews.npe.west.gcp.efx/internal/eev/queue-management/v1/queues",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev-workforce-api-internal.ews.npe.east.gcp.efx/internal/eev/queue-management/v1/queues",
+					"protocol": "https",
+					"host": [
+						"dev-workforce-api-internal",
+						"ews",
+						"npe",
+						"east",
+						"gcp",
+						"efx"
+					],
+					"path": [
+						"internal",
+						"eev",
+						"queue-management",
+						"v1",
+						"queues"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_HOST",
+			"value": "http://localhost:8080"
+		}
+	]
+}
